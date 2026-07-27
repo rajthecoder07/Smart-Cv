@@ -693,6 +693,260 @@ def chat():
     return render_template('chat.html', messages=chat_history)
 
 
+# ================= RESUME BUILDER ROUTES =================
+
+@app.route('/resume-builder')
+def resume_builder():
+    """Main resume builder page"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    templates = resume_builder.load_template_config()
+    resumes = get_user_resumes(get_db().cursor(), session['username'])
+    prefilled_samples = load_prefilled_samples()
+    
+    return render_template('resume_builder.html', templates=templates, resumes=resumes, prefilled_samples=prefilled_samples)
+
+
+@app.route('/resume-builder/new/<template_id>')
+def new_resume(template_id):
+    """Start creating a new resume from a template"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    templates = resume_builder.load_template_config()
+    template = next((t for t in templates if t['id'] == template_id), None)
+    
+    if not template:
+        flash("Template not found!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Create new resume in database
+    resume_id = create_resume(cursor, conn, session['username'], template_id)
+    
+    if not resume_id:
+        flash("Failed to create resume!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    return redirect(url_for('resume_editor', resume_id=resume_id))
+
+
+@app.route('/resume-builder/new-prefilled/<sample_id>')
+def new_prefilled_resume(sample_id):
+    """Start creating a new resume from a pre-filled professional sample"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    samples = load_prefilled_samples()
+    sample = next((s for s in samples if s['id'] == sample_id), None)
+    
+    if not sample:
+        flash("Sample not found!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Create new resume in database prefilled with sample data
+    resume_id = create_resume(cursor, conn, session['username'], sample['template_id'], sample['resume_data'])
+    
+    if not resume_id:
+        flash("Failed to create pre-filled resume!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    flash(f"Successfully loaded '{sample['name']}' ready-made CV! You can now edit and save it.", "success")
+    return redirect(url_for('resume_editor', resume_id=resume_id))
+
+
+@app.route('/resume-editor/<int:resume_id>')
+def resume_editor(resume_id):
+    """Resume editor with live preview"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    resume = get_resume(cursor, resume_id)
+    
+    if not resume or resume['username'] != session['username']:
+        flash("Resume not found!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    form_fields = resume_builder.load_form_fields()
+    templates = resume_builder.load_template_config()
+    template = next((t for t in templates if t['id'] == resume['template_id']), None)
+    
+    return render_template('resume_editor.html', 
+                          resume=resume,
+                          form_fields=form_fields,
+                          template=template)
+
+
+@app.route('/api/form-fields')
+def get_form_fields_api():
+    """API endpoint to get form fields for a template"""
+    if 'username' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    fields = resume_builder.load_form_fields()
+    return jsonify(fields)
+
+
+@app.route('/api/resume/preview', methods=['POST'])
+def preview_resume():
+    """Generate live preview of resume"""
+    if 'username' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    data = request.get_json()
+    template_id = data.get('template_id', 'sidebar-professional')
+    resume_data = data.get('resume_data', {})
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    template_file = resume_builder.get_template_html_file(template_id)
+    
+    if not template_file:
+        return jsonify({'success': False, 'error': 'Template not found'}), 404
+    
+    try:
+        from flask import current_app
+        formatted_data = resume_builder.format_resume_data_for_template(resume_data)
+        
+        # Render template
+        html = render_template(template_file, **formatted_data)
+        
+        return jsonify({
+            'success': True,
+            'html': html
+        })
+    except Exception as e:
+        print(f"[PREVIEW ERROR]: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/resume/save', methods=['POST'])
+def save_resume_api():
+    """Save resume data"""
+    if 'username' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    data = request.get_json()
+    resume_id = data.get('resume_id')
+    resume_data = data.get('resume_data', {})
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    if resume_id:
+        # Update existing resume
+        update_resume(cursor, conn, resume_id, resume_data)
+        return jsonify({'success': True, 'resume_id': resume_id})
+    else:
+        # Create new resume
+        template_id = data.get('template_id', 'sidebar-professional')
+        resume_id = create_resume(cursor, conn, session['username'], template_id, resume_data)
+        return jsonify({'success': True, 'resume_id': resume_id})
+
+
+@app.route('/api/resume/<int:resume_id>/upload-image', methods=['POST'])
+def upload_profile_image(resume_id):
+    """Upload profile image for resume"""
+    if 'username' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    resume = get_resume(cursor, resume_id)
+    
+    if not resume or resume['username'] != session['username']:
+        return jsonify({'error': 'Resume not found'}), 404
+    
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+    
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    base64_image, error = resume_builder.process_profile_image(file, resume_id, session['username'])
+    
+    if error:
+        return jsonify({'error': error}), 400
+    
+    # Update resume with image
+    resume['resume_data']['personal']['profileImage'] = base64_image
+    update_resume(cursor, conn, resume_id, resume['resume_data'])
+    
+    return jsonify({
+        'success': True,
+        'image': base64_image
+    })
+
+
+@app.route('/resume-preview/<int:resume_id>')
+def view_resume_preview(resume_id):
+    """View full A4-style resume preview"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    resume = get_resume(cursor, resume_id)
+    
+    if not resume or resume['username'] != session['username']:
+        flash("Resume not found!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    resume_builder = ResumeBuilder(BASE_DIR)
+    template_file = resume_builder.get_template_html_file(resume['template_id'])
+    
+    if not template_file:
+        flash("Template not found!", "danger")
+        return redirect(url_for('resume_builder'))
+    
+    formatted_data = resume_builder.format_resume_data_for_template(resume['resume_data'])
+    
+    return render_template(template_file, **formatted_data)
+
+
+@app.route('/resume-list')
+def resume_list():
+    """List all resumes for current user"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    resumes = get_user_resumes(cursor, session['username'])
+    
+    return render_template('resume_list.html', resumes=resumes)
+
+
+@app.route('/api/resume/<int:resume_id>/delete', methods=['POST'])
+def delete_resume_api(resume_id):
+    """Delete a resume"""
+    if 'username' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    resume = get_resume(cursor, resume_id)
+    
+    if not resume or resume['username'] != session['username']:
+        return jsonify({'error': 'Resume not found'}), 404
+    
+    delete_resume(cursor, conn, resume_id)
+    return jsonify({'success': True})
+
+
 # ================= RUN =================
 
 if __name__ == '__main__':

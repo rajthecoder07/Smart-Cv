@@ -805,8 +805,11 @@
             
             <!-- Hover actions overlay -->
             <div class="card-hover-overlay">
-              <button class="overlay-btn overlay-btn-primary" onclick="selectForAnalysis('{{ template.id }}')">
-                <i class="bi bi-stars me-1"></i>Use This Template
+              <a href="{{ url_for('new_resume', template_id=template.id) }}" class="overlay-btn overlay-btn-primary">
+                <i class="bi bi-play-fill me-1"></i>Start Building
+              </a>
+              <button class="overlay-btn overlay-btn-secondary" onclick="selectForAnalysis('{{ template.id }}')">
+                <i class="bi bi-stars me-1"></i>Use for AI Analysis
               </button>
               <a class="overlay-link" onclick="openPreview('{{ template.id }}')">
                 <i class="bi bi-eye"></i>Preview Details
@@ -858,11 +861,11 @@
 
       <div id="modalPreviewImg" style="text-align:center; margin-bottom: 1.25rem;"></div>
       <div class="modal-actions">
-        <button id="modalAnalysisBtn" class="modal-btn primary" onclick="selectForAnalysis(selectedTemplateId)">
+        <a id="modalBuildBtn" class="modal-btn primary">
+          <i class="bi bi-play-fill"></i>Start Building
+        </a>
+        <button id="modalAnalysisBtn" class="modal-btn secondary" onclick="selectForAnalysis(selectedTemplateId)">
           <i class="bi bi-stars"></i>Use for AI Analysis
-        </button>
-        <button class="modal-btn secondary" onclick="closePreview()">
-          <i class="bi bi-x-lg"></i>Close
         </button>
       </div>
     </div>
@@ -997,6 +1000,10 @@
       // Show mini preview image in modal
       const imgContainer = document.getElementById('modalPreviewImg');
       imgContainer.innerHTML = `<img src="${template.preview_image}" alt="${template.name}" style="max-width:100%; max-height:240px; border-radius:10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">`;
+
+      // Update button links
+      document.getElementById('modalBuildBtn').setAttribute('href', `/resume-builder/new/${templateId}`);
+      document.getElementById('modalAnalysisBtn').setAttribute('onclick', `selectForAnalysis('${templateId}')`);
 
       document.getElementById('previewModal').classList.add('show');
       document.body.style.overflow = 'hidden';
