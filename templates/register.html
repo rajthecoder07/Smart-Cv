@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account — SmartCV{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 460px; padding: 4rem 1rem;">
+    
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+        <h2 style="font-weight: 700; font-size: 1.75rem;">Create Your Account</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">
+            Join SmartCV and start analyzing your resume
+        </p>
+    </div>
+    
+    <!-- Registration Card -->
+    <div class="card">
+        <div class="card-body" style="padding: 2rem;">
+            
+            <!--
+                FORM: action="" means submit to the SAME URL (/register)
+                method="POST" sends data securely in the request body
+                (not in the URL like GET would)
+            -->
+            <form action="{{ url_for('register') }}" method="POST" class="show-loading">
+                
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name"
+                           placeholder="e.g. John Doe" required autocomplete="name">
+                </div>
+                
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                           placeholder="you@example.com" required autocomplete="email">
+                </div>
+                
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username"
+                           placeholder="Choose a unique username"
+                           pattern="[a-zA-Z0-9_]{3,20}"
+                           title="3–20 characters, letters, numbers, underscores only"
+                           required autocomplete="username">
+                    <div class="form-text" style="color: var(--text-muted); font-size: 0.78rem;">
+                        3–20 characters, letters and numbers only
+                    </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Choose a strong password"
+                               minlength="6" required autocomplete="new-password">
+                        <!-- Toggle password visibility (handled in main.js) -->
+                        <button type="button" class="btn toggle-password"
+                                data-target="password"
+                                style="background: var(--dark); border: 1px solid var(--border); color: var(--text-muted);">
+                            👁
+                        </button>
+                    </div>
+                    <div class="form-text" style="color: var(--text-muted); font-size: 0.78rem;">
+                        Minimum 6 characters
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100 btn-lg">
+                    Create Account
+                </button>
+                
+            </form>
+            
+            <!-- Divider -->
+            <div class="divider-text my-3">Already have an account?</div>
+            
+            <!-- Link to Login -->
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary w-100">
+                Sign In Instead
+            </a>
+            
+        </div>
+    </div>
+    
+    <!-- Privacy note -->
+    <p class="text-center mt-3" style="color: var(--text-muted); font-size: 0.78rem;">
+        🔒 Your password is securely hashed. We never store plain text passwords.
+    </p>
+    
+</div>
+{% endblock %}

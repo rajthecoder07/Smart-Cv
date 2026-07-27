@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal.fullName }} - {{ personal.title }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .resume-container {
+            max-width: 8.5in;
+            height: 11in;
+            background: white;
+            margin: 0 auto;
+            display: flex;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar {
+            width: 30%;
+            background: #2c3e50;
+            color: white;
+            padding: 30px 20px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            width: 70%;
+            padding: 30px 25px;
+            overflow-y: auto;
+        }
+        
+        /* Profile Image */
+        .profile-image-wrapper {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            background: #444;
+        }
+        
+        /* Name in main content */
+        .resume-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+        
+        .resume-title {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        /* Sidebar sections */
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        
+        .sidebar-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .sidebar-item {
+            font-size: 12px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .sidebar-item-label {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-item-value {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin: 2px 2px 2px 0;
+        }
+        
+        .language-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        
+        .language-dots {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+        }
+        
+        .dot.filled {
+            background: white;
+        }
+        
+        /* Main content sections */
+        .content-section {
+            margin-bottom: 20px;
+        }
+        
+        .content-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #2563eb;
+        }
+        
+        .content-section-text {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .experience-item {
+            margin-bottom: 12px;
+        }
+        
+        .job-title {
+            font-weight: 700;
+            font-size: 11px;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+        
+        .job-company {
+            font-size: 10px;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+        
+        .job-description {
+            font-size: 10px;
+            line-height: 1.5;
+            color: #333;
+            margin-left: 0;
+        }
+        
+        .job-bullet {
+            margin-bottom: 3px;
+        }
+        
+        .education-item {
+            margin-bottom: 10px;
+        }
+        
+        .degree {
+            font-weight: 700;
+            font-size: 11px;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+        
+        .school {
+            font-size: 10px;
+            color: #7f8c8d;
+            margin-bottom: 1px;
+        }
+        
+        .school-date {
+            font-size: 9px;
+            color: #999;
+        }
+        
+        /* Print styles */
+        @media print {
+            body { padding: 0; background: white; }
+            .resume-container { box-shadow: none; max-width: 100%; height: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            {% if personal.profileImage %}
+            <div class="profile-image-wrapper">
+                <img src="{{ personal.profileImage }}" alt="Profile" class="profile-image">
+            </div>
+            {% endif %}
+            
+            <!-- Contact -->
+            {% if personal.location or personal.email or personal.phone %}
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Contact</div>
+                {% if personal.location %}
+                <div class="sidebar-item">
+                    <div class="sidebar-item-value">{{ personal.location }}</div>
+                </div>
+                {% endif %}
+                {% if personal.phone %}
+                <div class="sidebar-item">
+                    <div class="sidebar-item-value">{{ personal.phone }}</div>
+                </div>
+                {% endif %}
+                {% if personal.email %}
+                <div class="sidebar-item">
+                    <div class="sidebar-item-value">{{ personal.email }}</div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Skills -->
+            {% if skills %}
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Skills</div>
+                {% for skill in skills %}
+                <div class="skill-tag">{{ skill }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Languages -->
+            {% if languages %}
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Languages</div>
+                {% for lang in languages %}
+                <div class="sidebar-item">
+                    <div class="sidebar-item-label">{{ lang.name }}</div>
+                    <div class="language-dots">
+                        {% for i in range(5) %}
+                        <div class="dot {% if i < lang.level|int %}filled{% endif %}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- References -->
+            {% if references %}
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">References</div>
+                {% for ref in references %}
+                <div class="sidebar-item">
+                    <div class="sidebar-item-label">{{ ref.name }}</div>
+                    <div class="sidebar-item-value">{{ ref.contact }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- Header -->
+            <div style="margin-bottom: 15px;">
+                <div class="resume-name">{{ personal.fullName }}</div>
+                <div class="resume-title">{{ personal.title }}</div>
+            </div>
+            
+            <!-- Profile -->
+            {% if profile %}
+            <div class="content-section">
+                <div class="content-section-title">Profile</div>
+                <div class="content-section-text">{{ profile }}</div>
+            </div>
+            {% endif %}
+            
+            <!-- Work Experience -->
+            {% if experience %}
+            <div class="content-section">
+                <div class="content-section-title">Work Experience</div>
+                {% for job in experience %}
+                <div class="experience-item">
+                    <div class="job-title">{{ job.title }} | {{ job.company }}</div>
+                    <div class="job-company">{{ job.dates }}</div>
+                    {% if job.description %}
+                    <div class="job-description">
+                        {% if job.description is string %}
+                        {{ job.description }}
+                        {% else %}
+                        {% for bullet in job.description %}
+                        <div class="job-bullet">• {{ bullet }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Education -->
+            {% if education %}
+            <div class="content-section">
+                <div class="content-section-title">Educations & Certifications</div>
+                {% for edu in education %}
+                <div class="education-item">
+                    <div class="degree">{{ edu.degree }} | {{ edu.school }}</div>
+                    <div class="school-date">{{ edu.dates }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

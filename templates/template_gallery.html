@@ -1,0 +1,1021 @@
+{% extends 'base.html' %}
+{% block title %}Resume Templates — SmartCV{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Base variables */
+  :root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --sidebar-bg: #1e293b;
+    --sidebar-text: #94a3b8;
+    --sidebar-active: #2563eb;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --dot-professional: #3b82f6;
+    --dot-modern: #10b981;
+    --dot-creative: #a855f7;
+    --dot-simple: #f59e0b;
+  }
+
+  .gallery-layout {
+    display: flex;
+    min-height: calc(100vh - 65px);
+    background-color: #f8fafc;
+  }
+
+  /* Left Sidebar */
+  .gallery-sidebar {
+    width: 280px;
+    background-color: var(--sidebar-bg);
+    color: #ffffff;
+    padding: 2.5rem 1.5rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--sidebar-text);
+    margin-bottom: 1rem;
+  }
+
+  .category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .category-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .category-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+
+  .category-item.active {
+    background-color: var(--sidebar-active);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .feature-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+  }
+
+  .feature-checkbox-label:hover {
+    color: #ffffff;
+  }
+
+  .feature-checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid #475569;
+    background-color: transparent;
+    cursor: pointer;
+    appearance: none;
+    display: grid;
+    place-content: center;
+    transition: all 0.2s;
+  }
+
+  .feature-checkbox:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .feature-checkbox:checked::before {
+    content: "\F26B"; /* bootstrap-icons check */
+    font-family: "bootstrap-icons";
+    font-size: 10px;
+    color: white;
+    font-weight: 900;
+  }
+
+  .pro-tip-box {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: auto;
+  }
+
+  .pro-tip-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  .pro-tip-text {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  /* Right Side Content */
+  .gallery-main {
+    flex: 1;
+    padding: 2.5rem;
+    overflow-y: auto;
+  }
+
+  /* Hero Banner */
+  .gallery-banner {
+    background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banner-content {
+    max-width: 60%;
+    z-index: 1;
+  }
+
+  .banner-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+
+  .banner-subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .banner-badges {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .banner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+  }
+
+  /* CSS Resume Illustration */
+  .banner-illustration {
+    position: relative;
+    width: 220px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ill-page {
+    width: 90px;
+    height: 120px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    position: absolute;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ill-page-1 {
+    transform: rotate(-6deg) translate(-25px, -5px);
+    z-index: 1;
+  }
+
+  .ill-page-2 {
+    transform: rotate(6deg) translate(25px, 5px);
+    z-index: 2;
+  }
+
+  .ill-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+  }
+
+  .ill-line {
+    height: 4px;
+    border-radius: 2px;
+    background-color: #f1f5f9;
+  }
+  .ill-line.short { width: 40%; }
+  .ill-line.mid { width: 70%; }
+  .ill-line.long { width: 100%; }
+  .ill-line.primary-color { background-color: #93c5fd; }
+  .ill-line.accent-color { background-color: #c084fc; }
+
+  .ill-glass {
+    position: absolute;
+    bottom: -10px;
+    right: 25px;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #3b82f6;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    font-size: 1.25rem;
+    font-weight: bold;
+    animation: bounceGlass 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes bounceGlass {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-5px) scale(1.05); }
+  }
+
+  /* Grid Title & Search bar */
+  .grid-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .grid-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .search-wrapper {
+    position: relative;
+    width: 300px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    font-size: 0.88rem;
+    color: #334155;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  /* Template Card */
+  .template-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .template-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+  }
+
+  .card-preview-wrapper {
+    height: 290px;
+    background-color: #f8fafc;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .card-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .template-card:hover .card-preview-img {
+    transform: scale(1.03);
+  }
+
+  /* Hover Overlay */
+  .card-hover-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    padding: 1.5rem;
+  }
+
+  .template-card:hover .card-hover-overlay {
+    opacity: 1;
+  }
+
+  .overlay-btn {
+    width: 100%;
+    max-width: 180px;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none !important;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .overlay-btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+
+  .overlay-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  }
+
+  .overlay-btn-secondary {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .overlay-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .overlay-link {
+    color: #cbd5e1 !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    margin-top: 0.25rem;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+  }
+
+  .overlay-link:hover {
+    color: #ffffff !important;
+  }
+
+  /* Card Details Footer */
+  .card-footer-info {
+    padding: 1rem 1.25rem;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .category-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .category-dot.professional { background-color: var(--dot-professional); }
+  .category-dot.modern { background-color: var(--dot-modern); }
+  .category-dot.creative { background-color: var(--dot-creative); }
+  .category-dot.simple { background-color: var(--dot-simple); }
+
+  .category-name-text {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+  }
+
+  /* Modal styling details */
+  .preview-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .preview-modal.show { display: flex; }
+
+  .modal-container {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .modal-close-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #64748b;
+    transition: all 0.2s;
+  }
+
+  .modal-close-btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    border-color: #fca5a5;
+  }
+
+  .modal-body {
+    padding: 1.75rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .modal-btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    text-decoration: none !important;
+  }
+
+  .modal-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white !important;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .modal-btn.primary:hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  }
+
+  .modal-btn.secondary {
+    background-color: transparent;
+    color: #64748b !important;
+    border: 1px solid #cbd5e1;
+    justify-content: center;
+  }
+
+  .modal-btn.secondary:hover {
+    background-color: #f1f5f9;
+    color: #1e293b !important;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 991px) {
+    .gallery-layout {
+      flex-direction: column;
+    }
+    .gallery-sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+    }
+    .pro-tip-box {
+      display: none;
+    }
+    .gallery-main {
+      padding: 1.5rem;
+    }
+    .gallery-banner {
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .banner-content {
+      max-width: 100%;
+    }
+    .banner-badges {
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gallery-layout">
+  
+  <!-- LEFT SIDEBAR -->
+  <aside class="gallery-sidebar">
+    
+    <!-- Categories section -->
+    <div>
+      <div class="sidebar-section-title">Categories</div>
+      <ul class="category-list">
+        <li>
+          <a class="category-item active" data-category="all">
+            <i class="bi bi-grid-3x3-gap me-2"></i>All Templates
+          </a>
+        </li>
+        <li>
+          <a class="category-item" data-category="Professional">
+            <i class="bi bi-briefcase me-2"></i>Professional
+          </a>
+        </li>
+        <li>
+          <a class="category-item" data-category="Modern">
+            <i class="bi bi-laptop me-2"></i>Modern
+          </a>
+        </li>
+        <li>
+          <a class="category-item" data-category="Creative">
+            <i class="bi bi-palette me-2"></i>Creative
+          </a>
+        </li>
+        <li>
+          <a class="category-item" data-category="Simple">
+            <i class="bi bi-file-text me-2"></i>Simple
+          </a>
+        </li>
+        <li>
+          <a class="category-item" data-category="ATS-Friendly">
+            <i class="bi bi-shield-check me-2"></i>ATS Friendly
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Features list -->
+    <div>
+      <div class="sidebar-section-title">Features</div>
+      <div class="feature-list">
+        <label class="feature-checkbox-label">
+          <input type="checkbox" class="feature-checkbox" data-feature="ATS-Friendly">
+          ATS Friendly
+        </label>
+        <label class="feature-checkbox-label">
+          <input type="checkbox" class="feature-checkbox" data-feature="Photo Support">
+          Photo Support
+        </label>
+        <label class="feature-checkbox-label">
+          <input type="checkbox" class="feature-checkbox" data-feature="Easy Customization">
+          Easy Customization
+        </label>
+        <label class="feature-checkbox-label">
+          <input type="checkbox" class="feature-checkbox" data-feature="Professional Look">
+          Professional Look
+        </label>
+        <label class="feature-checkbox-label">
+          <input type="checkbox" class="feature-checkbox" data-feature="Multiple Languages">
+          Multiple Languages
+        </label>
+      </div>
+    </div>
+
+    <!-- Pro Tip Box -->
+    <div class="pro-tip-box">
+      <div class="pro-tip-header">
+        <i class="bi bi-lightbulb-fill" style="color: #fbbf24;"></i>
+        Pro Tip
+      </div>
+      <div class="pro-tip-text">
+        Choose an ATS-friendly template to increase your chances of getting shortlisted.
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN GALLERY AREA -->
+  <main class="gallery-main">
+    
+    <!-- Hero Banner -->
+    <div class="gallery-banner">
+      <div class="banner-content">
+        <h2 class="banner-title">Find Your Perfect Template</h2>
+        <p class="banner-subtitle">
+          Choose from our collection of professionally designed templates that are ATS-friendly and customizable.
+        </p>
+        <div class="banner-badges">
+          <span class="banner-badge">
+            <i class="bi bi-check-circle-fill"></i> ATS-Friendly
+          </span>
+          <span class="banner-badge">
+            <i class="bi bi-check-circle-fill"></i> Photo Support
+          </span>
+          <span class="banner-badge">
+            <i class="bi bi-check-circle-fill"></i> Easy to Edit
+          </span>
+        </div>
+      </div>
+      
+      <!-- Resume Illustration -->
+      <div class="banner-illustration d-none d-md-flex">
+        <!-- Page 1 (behind) -->
+        <div class="ill-page ill-page-1">
+          <div class="d-flex gap-2 align-items-center">
+            <div class="ill-avatar"></div>
+            <div class="d-flex flex-column gap-1 flex-1">
+              <div class="ill-line short primary-color"></div>
+              <div class="ill-line mid"></div>
+            </div>
+          </div>
+          <div class="ill-line long"></div>
+          <div class="ill-line long"></div>
+          <div class="ill-line mid"></div>
+        </div>
+        <!-- Page 2 (front) -->
+        <div class="ill-page ill-page-2">
+          <div class="ill-line short accent-color" style="height: 6px;"></div>
+          <div class="ill-line long"></div>
+          <div class="ill-line long"></div>
+          <div class="ill-line mid"></div>
+          <div class="ill-line long"></div>
+        </div>
+        <!-- Magnifying Glass overlay -->
+        <div class="ill-glass">
+          <i class="bi bi-search"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Header Row -->
+    <div class="grid-header-row">
+      <div class="grid-title">
+        <i class="bi bi-stars" style="color: var(--primary-color);"></i>
+        Available Templates
+      </div>
+      <div class="search-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
+      </div>
+    </div>
+
+    <!-- Template Cards Grid -->
+    <div class="row g-4" id="templatesGrid">
+      {% for template in templates %}
+      <div class="col-xl-3 col-lg-4 col-md-6 template-card-col" 
+           data-name="{{ template.name|lower }}"
+           data-category="{{ template.category }}"
+           data-features='{{ template.features|tojson }}'>
+        
+        <div class="template-card">
+          <div class="card-preview-wrapper">
+            <img src="{{ template.preview_image }}" 
+                 alt="{{ template.name }}" 
+                 class="card-preview-img"
+                 onerror="this.src='/static/previews/default.png'">
+            
+            <!-- Hover actions overlay -->
+            <div class="card-hover-overlay">
+              <button class="overlay-btn overlay-btn-primary" onclick="selectForAnalysis('{{ template.id }}')">
+                <i class="bi bi-stars me-1"></i>Use This Template
+              </button>
+              <a class="overlay-link" onclick="openPreview('{{ template.id }}')">
+                <i class="bi bi-eye"></i>Preview Details
+              </a>
+            </div>
+          </div>
+          
+          <div class="card-footer-info" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.9rem 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="category-dot {{ template.category|lower }}"></div>
+              <span class="category-name-text">{{ template.category }}</span>
+            </div>
+            <div style="font-size: 0.92rem; font-weight: 700; color: #1e293b; margin-top: 0.15rem;">{{ template.name }}</div>
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state d-none">
+      <div class="empty-icon">
+        <i class="bi bi-emoji-frown"></i>
+      </div>
+      <h4>No Templates Match Your Filters</h4>
+      <p class="text-muted">Try clearing some filters or searching for something else.</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="preview-modal" id="previewModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="previewTitle">Template Preview</h3>
+      <button class="modal-close-btn" onclick="closePreview()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="modalDescription" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;"></div>
+      
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h5 style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem;">Key Features</h5>
+        <div id="modalFeatures" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+      </div>
+
+      <div id="modalPreviewImg" style="text-align:center; margin-bottom: 1.25rem;"></div>
+      <div class="modal-actions">
+        <button id="modalAnalysisBtn" class="modal-btn primary" onclick="selectForAnalysis(selectedTemplateId)">
+          <i class="bi bi-stars"></i>Use for AI Analysis
+        </button>
+        <button class="modal-btn secondary" onclick="closePreview()">
+          <i class="bi bi-x-lg"></i>Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='templates.js') }}"></script>
+<script>
+  // Template lists from backend
+  const allTemplates = {{ templates|tojson }};
+  let activeCategory = 'all';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add event listeners to Category filters
+    document.querySelectorAll('.category-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all
+        document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+        
+        // Add to clicked
+        item.classList.add('active');
+        activeCategory = item.getAttribute('data-category');
+        
+        filterTemplates();
+      });
+    });
+
+    // Add event listeners to Feature checkboxes
+    document.querySelectorAll('.feature-checkbox').forEach(box => {
+      box.addEventListener('change', () => {
+        filterTemplates();
+      });
+    });
+
+    // Add event listener to Search Input
+    document.getElementById('templateSearch').addEventListener('input', () => {
+      filterTemplates();
+    });
+  });
+
+  // Combined Filtering Logic
+  function filterTemplates() {
+    const searchQuery = document.getElementById('templateSearch').value.toLowerCase().trim();
+    
+    // Get checked features
+    const checkedFeatures = [];
+    document.querySelectorAll('.feature-checkbox:checked').forEach(box => {
+      checkedFeatures.push(box.getAttribute('data-feature'));
+    });
+
+    const cards = document.querySelectorAll('.template-card-col');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const name = card.getAttribute('data-name');
+      const category = card.getAttribute('data-category');
+      const features = JSON.parse(card.getAttribute('data-features'));
+
+      // Check name/search filter
+      const matchesSearch = name.includes(searchQuery);
+
+      // Check category filter
+      let matchesCategory = false;
+      if (activeCategory === 'all') {
+        matchesCategory = true;
+      } else if (activeCategory === 'ATS-Friendly') {
+        matchesCategory = features.includes('ATS-Friendly');
+      } else {
+        matchesCategory = (category === activeCategory);
+      }
+
+      // Check features checklist filter
+      const matchesFeatures = checkedFeatures.every(f => features.includes(f));
+
+      if (matchesSearch && matchesCategory && matchesFeatures) {
+        card.classList.remove('d-none');
+        visibleCount++;
+      } else {
+        card.classList.add('d-none');
+      }
+    });
+
+    // Show/hide empty state
+    const emptyState = document.getElementById('emptyState');
+    if (visibleCount === 0) {
+      emptyState.classList.remove('d-none');
+    } else {
+      emptyState.classList.add('d-none');
+    }
+  }
+
+  // Use for AI Analysis action
+  function selectForAnalysis(templateId) {
+    localStorage.setItem('selectedResumeTemplate', templateId);
+    
+    // Custom event to update navbar/widgets
+    if (window.TemplateManager) {
+      window.TemplateManager.selectTemplate(templateId);
+    }
+    
+    // Redirect to form
+    window.location.href = "{{ url_for('resume_form') }}";
+  }
+
+  // Preview Modal logic
+  let selectedTemplateId = null;
+
+  function openPreview(templateId) {
+    selectedTemplateId = templateId;
+    const template = allTemplates.find(t => t.id === templateId);
+    
+    if (template) {
+      document.getElementById('previewTitle').textContent = template.name + ' Preview';
+      document.getElementById('modalDescription').textContent = template.description;
+      
+      // Render features
+      const featuresContainer = document.getElementById('modalFeatures');
+      featuresContainer.innerHTML = '';
+      template.features.forEach(f => {
+        const span = document.createElement('span');
+        span.className = 'badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill';
+        span.style.fontSize = '0.78rem';
+        span.textContent = f;
+        featuresContainer.appendChild(span);
+      });
+
+      // Show mini preview image in modal
+      const imgContainer = document.getElementById('modalPreviewImg');
+      imgContainer.innerHTML = `<img src="${template.preview_image}" alt="${template.name}" style="max-width:100%; max-height:240px; border-radius:10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">`;
+
+      document.getElementById('previewModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closePreview() {
+    document.getElementById('previewModal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // Close modal on escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePreview();
+  });
+
+  // Close modal on click background
+  document.getElementById('previewModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('previewModal')) closePreview();
+  });
+</script>
+{% endblock %}

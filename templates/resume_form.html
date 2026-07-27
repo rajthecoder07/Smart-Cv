@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Form — SmartCV{% endblock %}
+
+{% block content %}
+
+<div class="container" style="max-width: 700px; padding: 3rem 1rem;">
+
+    <div class="mb-4">
+        <a href="{{ url_for('dashboard') }}" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">
+            ← Back to Dashboard
+        </a>
+        <h1 style="font-size: 1.75rem; font-weight: 700; margin-top: 0.75rem;">
+            📝 Resume Form
+        </h1>
+        <p style="color: var(--text-muted); margin-top: 0.25rem; font-size: 0.95rem;">
+            Fill in your details. Gemini AI will analyze and suggest best job roles for you.
+        </p>
+    </div>
+
+    <!-- Template Selector Widget -->
+    <div style="background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(99,102,241,0.08)); border: 1.5px solid rgba(14,165,233,0.2); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <strong style="color: var(--text); font-size: 0.95rem;">📄 Resume Template</strong>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.3rem 0 0;">
+                    <span id="selectedTemplateName">No template selected</span>
+                </p>
+            </div>
+            <a href="{{ url_for('template_gallery') }}" class="btn btn-outline-primary" style="font-size: 0.85rem;">
+                <i class="bi bi-pencil-square me-1"></i>Change Template
+            </a>
+        </div>
+    </div>
+
+    <div class="alert" style="background: rgba(13,148,136,0.08); border-left: 3px solid var(--primary); color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+        <strong>💡 Tip:</strong> Skills comma se separate karo.
+        Example: <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">python, sql, git, machine learning, pandas</code>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} mb-3">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <div class="card-body" style="padding: 2rem;">
+
+            <form action="{{ url_for('resume_form') }}" method="POST" class="show-loading">
+
+                <div class="mb-4">
+                    <label for="name" class="form-label">
+                        <i class="bi bi-person me-1"></i>Full Name
+                    </label>
+                    <input type="text" class="form-control" id="name" name="name"
+                        placeholder="e.g. Rahul Sharma">
+                </div>
+
+                <div class="mb-4">
+                    <label for="skills" class="form-label">
+                        <i class="bi bi-tools me-1"></i>
+                        Skills <span style="color: #f87171;">*</span>
+                    </label>
+                    <textarea class="form-control" id="skills" name="skills" rows="4"
+                        placeholder="e.g. python, javascript, sql, git, html, css, machine learning, react"
+                        required maxlength="1000"></textarea>
+                    <div class="form-text" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.4rem;">
+                        Sab skills comma se alag karo — jitni zyada, utna accurate result.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="experience" class="form-label">
+                        <i class="bi bi-briefcase me-1"></i>Work Experience
+                    </label>
+                    <textarea class="form-control" id="experience" name="experience" rows="3"
+                        placeholder="e.g. 1 year intern at ABC Corp as Python developer. Built REST APIs using Django."
+                        maxlength="1000"></textarea>
+                    <div class="form-text" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.4rem;">
+                        Internships, projects, part-time ya freelance kaam likho.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="education" class="form-label">
+                        <i class="bi bi-mortarboard me-1"></i>Education
+                    </label>
+                    <textarea class="form-control" id="education" name="education" rows="2"
+                        placeholder="e.g. B.Tech Computer Science, XYZ University, 2024"
+                        maxlength="500"></textarea>
+                </div>
+
+                <!-- AI Badge -->
+                <div class="text-center mb-4">
+                    <span style="background: rgba(13,148,136,0.1); color: var(--primary); border: 1px solid rgba(13,148,136,0.3); border-radius: 20px; padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 600;">
+                        ✨ Powered by Gemini AI — Real intelligence, not keyword matching!
+                    </span>
+                </div>
+
+                <hr style="border-color: var(--border); margin: 1.5rem 0;">
+
+                <button type="submit" class="btn btn-primary w-100" style="padding: 0.75rem;">
+                    <i class="bi bi-search me-2"></i>Analyze My Resume with AI
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ url_for('upload_pdf') }}" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">
+            Have a PDF? → Upload it instead
+        </a>
+    </div>
+
+</div>
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='templates.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update selected template name
+    const selectedTemplateName = document.getElementById('selectedTemplateName');
+    if (selectedTemplateName) {
+      const templateId = localStorage.getItem('selectedResumeTemplate');
+      if (templateId) {
+        // Try to get template name from manager
+        if (window.TemplateManager && window.TemplateManager.templates.length > 0) {
+          const template = window.TemplateManager.templates.find(t => t.id === templateId);
+          if (template) {
+            selectedTemplateName.textContent = template.name + ' ✓';
+            selectedTemplateName.style.color = 'var(--primary)';
+          }
+        }
+      }
+    }
+
+    // Listen for template selection events
+    window.addEventListener('templateSelected', function(e) {
+      const templateName = document.getElementById('selectedTemplateName');
+      if (templateName) {
+        templateName.textContent = e.detail.name + ' ✓';
+        templateName.style.color = 'var(--primary)';
+      }
+    });
+  });
+</script>
+{% endblock %}
+
+{% endblock %}

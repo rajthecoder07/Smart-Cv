@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Resume Editor — SmartCV{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='resume_editor.css') }}" rel="stylesheet">
+<style>
+  .resume-builder-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    background: var(--bg);
+  }
+
+  .editor-panel {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow-y: auto;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 100px);
+  }
+
+  .preview-panel {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow-y: auto;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 20px;
+  }
+
+  .preview-content {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .resume-builder-layout {
+      grid-template-columns: 1fr;
+    }
+    
+    .preview-panel {
+      position: static;
+      max-height: none;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="resume-builder-layout">
+  <!-- EDITOR PANEL -->
+  <div class="editor-panel">
+    <div style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: var(--text);">{{ template.name }}</h3>
+        <p style="margin: 0; font-size: 12px; color: var(--text-muted);">Fill in your details below</p>
+      </div>
+      <a href="{{ url_for('resume_list') }}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-arrow-left"></i> Back
+      </a>
+    </div>
+
+    <form id="resumeForm" style="padding: 0;">
+      <!-- Will be populated by JavaScript -->
+    </form>
+
+    <div style="padding: 24px; border-top: 1px solid var(--border);">
+      <button type="submit" form="resumeForm" class="btn btn-save-resume">
+        <i class="bi bi-cloud-check"></i> Save Resume
+      </button>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+      <h4 style="margin: 0; font-size: 13px; font-weight: 600; color: var(--text);">
+        <i class="bi bi-eye"></i> Live Preview (A4)
+      </h4>
+      <a href="{{ url_for('view_resume_preview', resume_id=resume.id) }}" target="_blank" class="btn btn-sm btn-preview-fullscreen">
+        <i class="bi bi-fullscreen"></i> Fullscreen
+      </a>
+    </div>
+
+    <div id="resumePreview" class="preview-content">
+      Loading preview...
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='resume_editor.js') }}"></script>
+<script>
+  // Initialize form manager
+  document.addEventListener('DOMContentLoaded', function() {
+    const formManager = new ResumeFormManager();
+    const templateId = '{{ template.id }}';
+    const resumeData = {{ resume.resume_data|tojson }};
+    
+    formManager.currentTemplate = templateId;
+    formManager.resumeData = resumeData;
+    formManager.resumeId = {{ resume.id }};
+    
+    // Build and populate form
+    formManager.buildDynamicForm(templateId);
+    
+    // Populate form with existing data
+    setTimeout(() => {
+      Object.entries(resumeData).forEach(([group, data]) => {
+        if (typeof data === 'object' && data !== null) {
+          Object.entries(data).forEach(([field, value]) => {
+            const input = document.querySelector(`[data-field="${field}"][data-group="${group}"]`);
+            if (input) {
+              input.value = value || '';
+              if (field === 'profileImage' && value) {
+                const preview = input.parentElement.querySelector('.image-preview');
+                const placeholder = input.parentElement.querySelector('.image-preview-placeholder');
+                if (preview) {
+                  preview.src = value;
+                  preview.style.display = 'block';
+                  if (placeholder) placeholder.style.display = 'none';
+                }
+              }
+            }
+          });
+        }
+      });
+      
+      // Update preview
+      formManager.updatePreview();
+    }, 1000);
+    
+    // Auto-save
+    formManager.startAutoSave();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Cover Letter Generator{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width:700px">
+    <h2 class="mb-1">✉️ AI Cover Letter Generator</h2>
+    <p class="text-muted mb-4">Apni details bharo — Claude ek professional cover letter likhega</p>
+
+    <form method="POST" class="card p-4 mb-4">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Aapka Naam</label>
+                <input name="name" class="form-control" placeholder="Rahul Sharma" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Company Ka Naam</label>
+                <input name="company" class="form-control" placeholder="Google, TCS, Startup..." required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Job Title (Jis role ke liye apply kar rahe ho)</label>
+            <input name="job_title" class="form-control" placeholder="Data Analyst, Python Developer..." required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Aapki Skills</label>
+            <textarea name="skills" class="form-control" rows="2"
+                placeholder="Python, SQL, Machine Learning, Flask..."></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Experience / Projects</label>
+            <textarea name="experience" class="form-control" rows="3"
+                placeholder="2 saal ka experience XYZ mein, SmartCV project banaya..."></textarea>
+        </div>
+        <button class="btn btn-primary w-100">
+            <i class="bi bi-magic me-1"></i>Cover Letter Generate Karo
+        </button>
+    </form>
+
+    {% if letter %}
+    <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">📄 Tera Cover Letter</h5>
+            <button class="btn btn-outline-primary btn-sm" onclick="copyLetter()">
+                <i class="bi bi-clipboard me-1"></i>Copy
+            </button>
+        </div>
+        <div id="letter-text" style="white-space:pre-wrap; line-height:1.9; font-size:0.95rem;">
+            {{ letter }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+function copyLetter() {
+    const text = document.getElementById('letter-text').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target.closest('button');
+        btn.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+        setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy', 2000);
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

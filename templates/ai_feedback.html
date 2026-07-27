@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% block title %}AI Resume Feedback — SmartCV{% endblock %}
+{% block content %}
+
+<section style="padding: 4rem 0; min-height: 80vh;">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <span class="badge mb-3 px-3 py-2"
+        style="background: rgba(13,148,136,0.15); color: var(--primary); font-size: 0.8rem; border-radius: 20px; border: 1px solid rgba(13,148,136,0.3);">
+        🤖 AI-Powered Feedback
+      </span>
+      <h2 style="font-size: 2rem; font-weight: 700;">Resume Improvement Analyzer</h2>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">
+        Upload your PDF or fill in details — get instant AI feedback
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+      <!-- Form Card -->
+      <div class="col-lg-5">
+        <div class="feature-card h-100">
+          <h5 style="font-weight: 700; margin-bottom: 1.5rem;">📋 Your Details</h5>
+
+          <form method="POST" enctype="multipart/form-data">
+
+            <!-- PDF Upload -->
+            <div class="mb-4">
+              <label style="font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; display: block;">
+                📄 Upload Resume PDF <span style="color: var(--text-muted); font-weight: 400;">(recommended)</span>
+              </label>
+              <div id="drop-zone"
+                style="border: 2px dashed rgba(13,148,136,0.4); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s; background: rgba(13,148,136,0.03);"
+                onclick="document.getElementById('resume_pdf').click()"
+                ondragover="event.preventDefault(); this.style.background='rgba(13,148,136,0.1)'"
+                ondragleave="this.style.background='rgba(13,148,136,0.03)'"
+                ondrop="handleDrop(event)">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+                <div id="drop-text" style="font-size: 0.85rem; color: var(--text-muted);">
+                  Click or drag your PDF here
+                </div>
+              </div>
+              <input type="file" id="resume_pdf" name="resume_pdf" accept=".pdf" style="display:none"
+                onchange="showFileName(this)">
+            </div>
+
+            <!-- Divider -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <hr style="flex: 1; border-color: var(--border);">
+              <span style="color: var(--text-muted); font-size: 0.8rem; white-space: nowrap;">OR fill manually</span>
+              <hr style="flex: 1; border-color: var(--border);">
+            </div>
+
+            <!-- Job Role -->
+            <div class="mb-3">
+              <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; display: block;">
+                🎯 Job Role <span style="color: var(--accent);">*</span>
+              </label>
+              <input type="text" name="job_role" class="form-control"
+                placeholder="e.g. Python Developer, Data Analyst"
+                style="background: var(--dark-card); border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; padding: 0.65rem 1rem;">
+            </div>
+
+            <!-- Skills -->
+            <div class="mb-3">
+              <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; display: block;">
+                ⚡ Skills
+              </label>
+              <input type="text" name="skills" class="form-control"
+                placeholder="e.g. Python, SQL, React, Git"
+                style="background: var(--dark-card); border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; padding: 0.65rem 1rem;">
+            </div>
+
+            <!-- Experience -->
+            <div class="mb-3">
+              <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; display: block;">
+                💼 Experience
+              </label>
+              <textarea name="experience" class="form-control" rows="3"
+                placeholder="Describe your work experience and projects..."
+                style="background: var(--dark-card); border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; padding: 0.65rem 1rem; resize: none;"></textarea>
+            </div>
+
+            <!-- Education -->
+            <div class="mb-4">
+              <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; display: block;">
+                🎓 Education
+              </label>
+              <input type="text" name="education" class="form-control"
+                placeholder="e.g. B.Tech CSE, Delhi University 2024"
+                style="background: var(--dark-card); border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; padding: 0.65rem 1rem;">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+              🚀 Get AI Feedback
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Feedback Card -->
+      <div class="col-lg-6">
+        {% if feedback %}
+        <div class="feature-card h-100">
+          <h5 style="font-weight: 700; margin-bottom: 1.5rem;">📊 AI Feedback Report</h5>
+
+          {% set sections = feedback.split('\n\n') %}
+          {% for section in sections %}
+
+            {% if section.startswith('⭐') %}
+            <!-- Score -->
+            <div style="background: linear-gradient(135deg, rgba(13,148,136,0.15), rgba(245,158,11,0.1)); border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; text-align: center;">
+              <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">
+                {{ section.split(': ')[1] if ': ' in section else section }}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Overall Resume Score</div>
+            </div>
+
+            {% elif section.startswith('✅') %}
+            <!-- Strengths -->
+            <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-weight: 700; color: var(--success); margin-bottom: 0.6rem;">✅ Strengths</div>
+              {% for line in section.split('\n')[1:] %}
+                {% if line.strip() %}
+                <div style="font-size: 0.88rem; color: var(--text-primary); padding: 0.35rem 0; border-bottom: 1px solid rgba(16,185,129,0.1); display: flex; align-items: flex-start; gap: 0.5rem;">
+                  <span style="color: var(--success); flex-shrink: 0;">•</span>
+                  {{ line.replace('- ', '').strip() }}
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            {% elif section.startswith('🔧') %}
+            <!-- Improvements -->
+            <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.6rem;">🔧 Areas to Improve</div>
+              {% for line in section.split('\n')[1:] %}
+                {% if line.strip() %}
+                <div style="font-size: 0.88rem; color: var(--text-primary); padding: 0.35rem 0; border-bottom: 1px solid rgba(245,158,11,0.1); display: flex; align-items: flex-start; gap: 0.5rem;">
+                  <span style="color: var(--accent); flex-shrink: 0;">•</span>
+                  {{ line.replace('- ', '').strip() }}
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            {% elif section.startswith('📝') %}
+            <!-- Suggested Lines -->
+            <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-weight: 700; color: #818cf8; margin-bottom: 0.6rem;">📝 Suggested Resume Lines</div>
+              {% for line in section.split('\n')[1:] %}
+                {% if line.strip() %}
+                <div style="font-size: 0.85rem; color: var(--text-primary); padding: 0.35rem 0; border-bottom: 1px solid rgba(99,102,241,0.1); font-style: italic;">
+                  "{{ line.replace('- ', '').strip() }}"
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            {% elif section.startswith('🔑') %}
+            <!-- ATS Keywords -->
+            <div style="background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.8rem;">🔑 Missing ATS Keywords</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                {% for line in section.split('\n')[1:] %}
+                  {% if line.strip() and 'already present' not in line %}
+                    <span style="background: rgba(13,148,136,0.15); color: var(--primary); border: 1px solid rgba(13,148,136,0.3); border-radius: 20px; padding: 0.25rem 0.8rem; font-size: 0.78rem; font-weight: 600;">
+                      {{ line.replace('- ', '').strip() }}
+                    </span>
+                  {% elif 'already present' in line %}
+                    <span style="color: var(--success); font-size: 0.85rem;">✅ All keywords already present!</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+            {% elif section.startswith('💡') %}
+            <!-- Pro Tips -->
+            <div style="background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-weight: 700; color: #818cf8; margin-bottom: 0.6rem;">💡 Pro Tips</div>
+              {% for line in section.split('\n')[1:] %}
+                {% if line.strip() %}
+                <div style="font-size: 0.88rem; color: var(--text-primary); padding: 0.35rem 0; border-bottom: 1px solid rgba(99,102,241,0.1); display: flex; align-items: flex-start; gap: 0.5rem;">
+                  <span style="color: #818cf8; flex-shrink: 0;">→</span>
+                  {{ line.replace('- ', '').strip() }}
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+          {% endfor %}
+
+          <a href="{{ url_for('ai_feedback') }}" class="btn btn-outline-primary w-100 mt-2">
+            🔄 Analyze Another Resume
+          </a>
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="feature-card h-100 d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 400px;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+          <h5 style="font-weight: 700;">AI Feedback Will Appear Here</h5>
+          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 300px; margin-top: 0.5rem;">
+            Upload your PDF or fill in the form — AI will analyze your resume and provide detailed feedback instantly.
+          </p>
+          <div class="d-flex gap-2 mt-4 flex-wrap justify-content-center">
+            <span style="background: rgba(16,185,129,0.1); color: var(--success); border-radius: 20px; padding: 0.3rem 0.85rem; font-size: 0.78rem; border: 1px solid rgba(16,185,129,0.2);">✅ Score out of 10</span>
+            <span style="background: rgba(13,148,136,0.1); color: var(--primary); border-radius: 20px; padding: 0.3rem 0.85rem; font-size: 0.78rem; border: 1px solid rgba(13,148,136,0.2);">🔑 ATS Keywords</span>
+            <span style="background: rgba(245,158,11,0.1); color: var(--accent); border-radius: 20px; padding: 0.3rem 0.85rem; font-size: 0.78rem; border: 1px solid rgba(245,158,11,0.2);">💡 Pro Tips</span>
+            <span style="background: rgba(99,102,241,0.1); color: #818cf8; border-radius: 20px; padding: 0.3rem 0.85rem; font-size: 0.78rem; border: 1px solid rgba(99,102,241,0.2);">📝 Resume Lines</span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+function showFileName(input) {
+  const dropText = document.getElementById('drop-text');
+  const dropZone = document.getElementById('drop-zone');
+  if (input.files && input.files[0]) {
+    dropText.innerHTML = `✅ <strong>${input.files[0].name}</strong> selected`;
+    dropZone.style.borderColor = 'var(--primary)';
+    dropZone.style.background = 'rgba(13,148,136,0.08)';
+  }
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    const input = document.getElementById('resume_pdf');
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    showFileName(input);
+  }
+  e.currentTarget.style.background = 'rgba(13,148,136,0.03)';
+}
+</script>
+
+{% endblock %}

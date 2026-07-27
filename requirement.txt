@@ -1,0 +1,6 @@
+flask
+python-dotenv
+pdfplumber
+google-genai
+scikit-learn
+Pillow

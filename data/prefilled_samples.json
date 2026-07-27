@@ -1,0 +1,226 @@
+[
+  {
+    "id": "software-engineer",
+    "name": "Software Engineer (Omar Lawson style)",
+    "description": "Premium two-column layout matching the elegant professional look of Omar Lawson's CV.",
+    "template_id": "sidebar-professional",
+    "icon": "💻",
+    "category": "Tech",
+    "resume_data": {
+      "personal": {
+        "fullName": "Omar Lawson",
+        "title": "Software Engineer",
+        "email": "mus.radl85@gmail.com",
+        "phone": "01559988776",
+        "location": "Frankfurt, Germany",
+        "profileImage": null
+      },
+      "profile": "Highly accomplished Software Engineer with 10+ years' experience in designing, developing, and deploying high-performance applications. Proven ability to lead teams, deliver innovative solutions, and exceed expectations. Expertise in Java, Python, and cloud technologies.",
+      "skills": ["Python", "Java", "Django", "Mysql", "Javascript", "Scrum Methodology"],
+      "languages": [
+        {"name": "Arabic", "level": 5},
+        {"name": "English", "level": 4},
+        {"name": "German", "level": 2}
+      ],
+      "experience": [
+        {
+          "title": "Software Developer",
+          "company": "Integrated Group - Damascus",
+          "dates": "January 2017 - Current",
+          "description": [
+            "Implemented a RESTful API for seamless integration with third-party services.",
+            "Successfully debugged and resolved a critical production issue, minimizing downtime.",
+            "Led the refactoring of legacy code, resulting in a 20% performance increase.",
+            "Developed and deployed a user authentication system, improving security and user experience."
+          ]
+        },
+        {
+          "title": "Software Tester",
+          "company": "Dutch Foundation - Berlin",
+          "dates": "January 2013 - December 2016",
+          "description": [
+            "Collaborated effectively with developers to resolve identified software defects.",
+            "Consistently met testing deadlines and delivered high-quality test results.",
+            "Successfully identified and reported 15 critical bugs in the pre-release version of the software, preventing customer issues.",
+            "Developed and implemented automated test scripts, reducing testing time by 20%."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "degree": "Master of Computer Science",
+          "school": "Düsseldorf University",
+          "dates": "September 2009 - July 2013"
+        },
+        {
+          "degree": "Qt Certification",
+          "school": "Nokia",
+          "dates": "February 2025"
+        }
+      ],
+      "references": []
+    }
+  },
+  {
+    "id": "data-analyst",
+    "name": "Senior Data Analyst (Priya Sharma style)",
+    "description": "Clean, highly structured layout with teal accents focused on numbers and visualizations.",
+    "template_id": "modern-clean",
+    "icon": "📊",
+    "category": "Tech",
+    "resume_data": {
+      "personal": {
+        "fullName": "Priya Sharma",
+        "title": "Senior Data Analyst",
+        "email": "priya.sharma@analytics.com",
+        "phone": "+91 98765 43210",
+        "location": "New Delhi, India",
+        "profileImage": null
+      },
+      "profile": "Result-driven and detail-oriented Senior Data Analyst with 5+ years of experience turning complex datasets into actionable business intelligence. Proven track record in optimizing data pipelines, building interactive dashboards, and collaborating with cross-functional teams to drive strategic decision-making.",
+      "skills": ["SQL", "Python", "Tableau", "Power BI", "Excel", "Pandas & NumPy", "Data Modeling", "Statistics"],
+      "languages": [
+        {"name": "Hindi", "level": 5},
+        {"name": "English", "level": 5}
+      ],
+      "experience": [
+        {
+          "title": "Senior Data Analyst",
+          "company": "Tech Solutions Inc.",
+          "dates": "June 2021 - Present",
+          "description": [
+            "Designed and maintained 15+ automated Tableau dashboards, reducing manual reporting hours by 40%.",
+            "Optimized complex SQL queries and ETL pipelines, improving data retrieval speeds by 30%.",
+            "Conducted market segmentation analyses that directly supported a 15% increase in quarterly sales conversion rates."
+          ]
+        },
+        {
+          "title": "Data Analyst",
+          "company": "Finance Corp",
+          "dates": "August 2018 - May 2021",
+          "description": [
+            "Analyzed operational workflows and identified inefficiencies, saving the department $50,000 annually.",
+            "Created predictive models in Python to forecast customer churn with 85% accuracy.",
+            "Presented monthly analytical insights to executive stakeholders to guide marketing budget allocations."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "degree": "Bachelor of Science in Statistics",
+          "school": "Delhi University",
+          "dates": "July 2015 - May 2018"
+        }
+      ],
+      "references": []
+    }
+  },
+  {
+    "id": "growth-marketer",
+    "name": "Growth Marketing Specialist (Alex Mercer style)",
+    "description": "Premium layout with dark header, ideal for marketing experts and brand strategies.",
+    "template_id": "header-professional",
+    "icon": "📈",
+    "category": "Professional",
+    "resume_data": {
+      "personal": {
+        "fullName": "Alex Mercer",
+        "title": "Growth Marketing Specialist",
+        "email": "alex.mercer@growth.io",
+        "phone": "+1 (555) 019-2834",
+        "location": "New York, USA",
+        "profileImage": null
+      },
+      "profile": "Highly creative and analytical Growth Marketer specializing in customer acquisition, SEO/SEM, and content strategy. Adept at managing paid ad budgets, executing data-driven campaigns, and driving brand awareness to accelerate customer acquisition and revenue growth.",
+      "skills": ["SEO", "Google Ads", "Content Marketing", "Copywriting", "Google Analytics", "A/B Testing", "Email Marketing", "Social Media Ads"],
+      "languages": [
+        {"name": "English", "level": 5},
+        {"name": "Spanish", "level": 3}
+      ],
+      "experience": [
+        {
+          "title": "Growth Marketing Manager",
+          "company": "WebScale Agency",
+          "dates": "March 2022 - Present",
+          "description": [
+            "Grew organic website traffic by 150% in 12 months through structured SEO audit and content strategy.",
+            "Managed a monthly ad spend of $20,000 across Google and Meta, maintaining an average ROAS of 4.2x.",
+            "Designed email nurture flows that increased lead-to-customer conversion rate by 18%."
+          ]
+        },
+        {
+          "title": "Marketing Coordinator",
+          "company": "RetailHub",
+          "dates": "October 2019 - February 2022",
+          "description": [
+            "Coordinated social media campaigns that expanded brand reach by 45% and boosted engagement by 60%.",
+            "Conducted A/B testing on landing pages, leading to a 22% improvement in signup conversions.",
+            "Wrote weekly high-converting newsletter copies for a subscriber base of 50,000+ users."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "degree": "MBA in Marketing",
+          "school": "NYU Stern School of Business",
+          "dates": "September 2017 - May 2019"
+        }
+      ],
+      "references": []
+    }
+  },
+  {
+    "id": "uiux-designer",
+    "name": "Senior UI/UX Designer (Sophia Chen style)",
+    "description": "Minimal clean layout focusing on whitespace, best ATS readability, and aesthetic design.",
+    "template_id": "minimal-clean",
+    "icon": "🎨",
+    "category": "Professional",
+    "resume_data": {
+      "personal": {
+        "fullName": "Sophia Chen",
+        "title": "Senior UI/UX Designer",
+        "email": "sophia.chen@designs.com",
+        "phone": "+65 8765 4321",
+        "location": "Singapore",
+        "profileImage": null
+      },
+      "profile": "Passionate and detail-oriented UI/UX Designer with 6+ years of experience designing elegant, user-centric interfaces and digital products. Skilled in creating seamless user flows, high-fidelity prototypes, and building brand identities that communicate value beautifully.",
+      "skills": ["Figma", "Adobe Creative Suite", "Wireframing", "Prototyping", "UI Design", "User Research", "Information Architecture", "HTML/CSS"],
+      "languages": [
+        {"name": "Mandarin", "level": 5},
+        {"name": "English", "level": 5}
+      ],
+      "experience": [
+        {
+          "title": "Senior Product Designer",
+          "company": "Creative Studio",
+          "dates": "January 2021 - Present",
+          "description": [
+            "Led the redesign of the flagship mobile app, improving active user retention by 25%.",
+            "Developed a comprehensive design system in Figma, reducing front-end development implementation time by 35%.",
+            "Facilitated 20+ user research sessions to gather feedback and refine prototype user experiences."
+          ]
+        },
+        {
+          "title": "UI/UX Designer",
+          "company": "PrintMedia Digital Agency",
+          "dates": "November 2017 - December 2020",
+          "description": [
+            "Designed high-fidelity responsive websites and web applications for 30+ client projects.",
+            "Created beautiful marketing collaterals, logos, and vector illustrations aligned with client branding.",
+            "Collaborated closely with developers using Git and Zeplin to ensure pixel-perfect deployment."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "degree": "Bachelor of Fine Arts in Graphic Design",
+          "school": "Rhode Island School of Design (RISD)",
+          "dates": "September 2013 - June 2017"
+        }
+      ],
+      "references": []
+    }
+  }
+]

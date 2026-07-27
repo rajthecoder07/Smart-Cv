@@ -1,0 +1,187 @@
+{
+  "fieldGroups": {
+    "personal": {
+      "label": "Personal Information",
+      "icon": "person",
+      "fields": {
+        "fullName": {
+          "label": "Full Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "e.g., Mohammad Whitaker"
+        },
+        "title": {
+          "label": "Professional Title",
+          "type": "text",
+          "required": true,
+          "placeholder": "e.g., Civil Engineer"
+        },
+        "email": {
+          "label": "Email Address",
+          "type": "email",
+          "required": true,
+          "placeholder": "your.email@example.com"
+        },
+        "phone": {
+          "label": "Phone Number",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g., +1 (555) 123-4567"
+        },
+        "location": {
+          "label": "Location",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g., Berlin, Germany"
+        },
+        "profileImage": {
+          "label": "Profile Image",
+          "type": "image",
+          "required": false,
+          "help": "JPG, PNG or JPEG (Max 5MB)"
+        }
+      }
+    },
+    "profile": {
+      "label": "Professional Summary",
+      "icon": "info-circle",
+      "fields": {
+        "profile": {
+          "label": "Professional Profile / Summary",
+          "type": "textarea",
+          "required": false,
+          "rows": 4,
+          "placeholder": "Write a brief professional summary about yourself...",
+          "maxLength": 500
+        }
+      }
+    },
+    "skills": {
+      "label": "Skills",
+      "icon": "lightning",
+      "fields": {
+        "skills": {
+          "label": "Add Your Skills",
+          "type": "tags",
+          "required": false,
+          "placeholder": "Type skill and press Enter",
+          "help": "Add technical and professional skills"
+        }
+      }
+    },
+    "languages": {
+      "label": "Languages",
+      "icon": "globe",
+      "fields": {
+        "languages": {
+          "label": "Languages",
+          "type": "multiselect",
+          "required": false,
+          "items": [
+            {
+              "name": "Language Name",
+              "type": "text",
+              "placeholder": "e.g., English"
+            },
+            {
+              "name": "Proficiency Level",
+              "type": "select",
+              "options": ["1", "2", "3", "4", "5"]
+            }
+          ]
+        }
+      }
+    },
+    "experience": {
+      "label": "Work Experience",
+      "icon": "briefcase",
+      "fields": {
+        "experience": {
+          "label": "Work Experience",
+          "type": "repeatable",
+          "required": false,
+          "items": {
+            "title": {
+              "label": "Job Title",
+              "type": "text",
+              "placeholder": "e.g., Project Manager"
+            },
+            "company": {
+              "label": "Company Name",
+              "type": "text",
+              "placeholder": "e.g., Horizon"
+            },
+            "dates": {
+              "label": "Dates (e.g., June 2023 — Current)",
+              "type": "text",
+              "placeholder": "e.g., June 2023 — Current"
+            },
+            "description": {
+              "label": "Job Description / Achievements (one per line)",
+              "type": "textarea",
+              "rows": 4,
+              "placeholder": "Add bullet points describing your achievements"
+            }
+          }
+        }
+      }
+    },
+    "education": {
+      "label": "Education & Certifications",
+      "icon": "book",
+      "fields": {
+        "education": {
+          "label": "Education & Certifications",
+          "type": "repeatable",
+          "required": false,
+          "items": {
+            "degree": {
+              "label": "Degree / Certification",
+              "type": "text",
+              "placeholder": "e.g., Bachelor of Science in Computer Science"
+            },
+            "school": {
+              "label": "School / Institution",
+              "type": "text",
+              "placeholder": "e.g., Stanford University"
+            },
+            "dates": {
+              "label": "Dates (e.g., 2018-09 — 2022-06)",
+              "type": "text",
+              "placeholder": "e.g., 2018-09 — 2022-06"
+            },
+            "details": {
+              "label": "Additional Details (optional)",
+              "type": "textarea",
+              "rows": 2,
+              "placeholder": "e.g., GPA, relevant coursework, honors"
+            }
+          }
+        }
+      }
+    },
+    "references": {
+      "label": "References (Optional)",
+      "icon": "users",
+      "fields": {
+        "references": {
+          "label": "References",
+          "type": "repeatable",
+          "required": false,
+          "items": {
+            "name": {
+              "label": "Reference Name",
+              "type": "text",
+              "placeholder": "Full name"
+            },
+            "contact": {
+              "label": "Contact Information",
+              "type": "text",
+              "placeholder": "Email or phone"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "sidebar-professional",
+    "name": "Sidebar Professional",
+    "description": "Classic design with dark blue sidebar containing contact, skills, and languages",
+    "category": "Professional",
+    "layout": "sidebar",
+    "preview_image": "/static/previews/sidebar-professional.png",
+    "colors": {
+      "primary": "#2c3e50",
+      "accent": "#2563eb",
+      "text": "#1f2937"
+    },
+    "features": ["Professional Look", "ATS-Friendly", "Photo Support", "Multiple Languages"],
+    "fields": {
+      "personal": ["fullName", "title", "email", "phone", "location", "profileImage"],
+      "profile": ["profile"],
+      "skills": ["skills"],
+      "languages": ["languages"],
+      "experience": ["experience"],
+      "education": ["education"],
+      "references": ["references"]
+    }
+  },
+  {
+    "id": "modern-clean",
+    "name": "Modern Clean",
+    "description": "Contemporary design with teal accents and clean typography",
+    "category": "Modern",
+    "layout": "modern",
+    "preview_image": "/static/previews/modern-clean.png",
+    "colors": {
+      "primary": "#1e7e9c",
+      "accent": "#06b6d4",
+      "text": "#1f2937"
+    },
+    "features": ["Modern Style", "Easy Customization", "Photo Support"],
+    "fields": {
+      "personal": ["fullName", "title", "email", "phone", "location", "profileImage"],
+      "profile": ["profile"],
+      "skills": ["skills"],
+      "languages": ["languages"],
+      "experience": ["experience"],
+      "education": ["education"]
+    }
+  },
+  {
+    "id": "modern-v2",
+    "name": "Modern V2",
+    "description": "Updated modern layout with improved section styling and typography",
+    "category": "Modern",
+    "layout": "modern",
+    "preview_image": "/static/previews/modern-clean.png",
+    "colors": {
+      "primary": "#0ea5e9",
+      "accent": "#06b6d4",
+      "text": "#1f2937"
+    },
+    "features": ["Modern Style", "ATS-Friendly", "Easy Customization"],
+    "fields": {
+      "personal": ["fullName", "title", "email", "phone", "location", "profileImage"],
+      "profile": ["profile"],
+      "skills": ["skills"],
+      "languages": ["languages"],
+      "experience": ["experience"],
+      "education": ["education"]
+    }
+  },
+  {
+    "id": "header-professional",
+    "name": "Header Professional",
+    "description": "Premium design with dark header and professional sidebar layout",
+    "category": "Creative",
+    "layout": "header",
+    "preview_image": "/static/previews/header-professional.png",
+    "colors": {
+      "primary": "#2d3e5f",
+      "accent": "#3d4e6f",
+      "text": "#2d3748"
+    },
+    "features": ["Bold Header", "Professional Look", "Photo Support", "Easy Customization"],
+    "fields": {
+      "personal": ["fullName", "title", "email", "phone", "location", "profileImage"],
+      "profile": ["profile"],
+      "skills": ["skills"],
+      "languages": ["languages"],
+      "experience": ["experience"],
+      "education": ["education"]
+    }
+  },
+  {
+    "id": "minimal-clean",
+    "name": "Minimal Clean",
+    "description": "Clean minimal design with excellent readability and ATS optimization",
+    "category": "Simple",
+    "layout": "minimal",
+    "preview_image": "/static/previews/minimal-clean.png",
+    "colors": {
+      "primary": "#1f2937",
+      "accent": "#6b7280",
+      "text": "#374151"
+    },
+    "features": ["Minimal Design", "ATS-Friendly", "Easy Customization", "Multiple Languages"],
+    "fields": {
+      "personal": ["fullName", "title", "email", "phone", "location", "profileImage"],
+      "profile": ["profile"],
+      "skills": ["skills"],
+      "languages": ["languages"],
+      "experience": ["experience"],
+      "education": ["education"]
+    }
+  }
+]

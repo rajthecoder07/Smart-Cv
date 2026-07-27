@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}History — SmartCV{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1rem;">
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <a href="{{ url_for('dashboard') }}" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none; display: block; margin-bottom: 0.5rem;">
+                ← Back to Dashboard
+            </a>
+            <h1 style="font-size: 1.75rem; font-weight: 700;">🕐 Analysis History</h1>
+            <p style="color: var(--text-muted); margin-top: 0.25rem; font-size: 0.95rem;">
+                All your past resume analyses — track your progress over time!
+            </p>
+        </div>
+        <a href="{{ url_for('resume_form') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus me-1"></i>New Analysis
+        </a>
+    </div>
+
+    {% if data %}
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ data | length }}</div>
+                    <div class="stat-label">Total Analyses</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--success);">
+                        {{ data | map(attribute=1) | map('int') | list | max }}%
+                    </div>
+                    <div class="stat-label">Best Score</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    {% set scores = data | map(attribute=1) | map('int') | list %}
+                    <div class="stat-number" style="color: var(--primary);">
+                        {{ ((scores | sum) / (scores | length)) | round | int }}%
+                    </div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number" style="font-size: 1rem; color: var(--accent);">Top Role</div>
+                    <div class="stat-label">{{ data[0][0] }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h6 class="mb-0" style="font-weight: 700;">All Analyses</h6>
+                <span style="font-size:0.8rem;color:var(--text-muted);">{{ data | length }} records</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th style="padding: 1rem 1.5rem;">#</th>
+                                <th>Job Role</th>
+                                <th>Score</th>
+                                <th>Matched Skills</th>
+                                <th>Missing Skills</th>
+                                <th>Date & Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            {# row = (job_title, score, matched_skills, missing_skills, timestamp) #}
+                            <tr>
+                                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">{{ loop.index }}</td>
+
+                                <td style="font-weight: 600;">{{ row[0] }}</td>
+
+                                <td>
+                                    {% set score = row[1] | int %}
+                                    {% if score >= 70 %}
+                                        <span style="color:var(--success);font-family:var(--font-mono);font-weight:700;">{{ score }}%</span>
+                                        <span class="badge ms-1" style="background:rgba(16,185,129,0.12);color:var(--success);font-size:0.7rem;">Excellent</span>
+                                    {% elif score >= 50 %}
+                                        <span style="color:var(--primary);font-family:var(--font-mono);font-weight:700;">{{ score }}%</span>
+                                        <span class="badge ms-1" style="background:rgba(14,165,233,0.12);color:var(--primary);font-size:0.7rem;">Good</span>
+                                    {% elif score >= 30 %}
+                                        <span style="color:var(--warning);font-family:var(--font-mono);font-weight:700;">{{ score }}%</span>
+                                        <span class="badge ms-1" style="background:rgba(245,158,11,0.12);color:var(--warning);font-size:0.7rem;">Average</span>
+                                    {% else %}
+                                        <span style="color:var(--danger);font-family:var(--font-mono);font-weight:700;">{{ score }}%</span>
+                                        <span class="badge ms-1" style="background:rgba(239,68,68,0.12);color:var(--danger);font-size:0.7rem;">Needs Work</span>
+                                    {% endif %}
+                                </td>
+
+                                <td style="max-width:200px;">
+                                    <div style="font-size:0.8rem;color:#059669;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                                         title="{{ row[2] }}">
+                                        {{ row[2] if row[2] else '—' }}
+                                    </div>
+                                </td>
+
+                                <td style="max-width:200px;">
+                                    <div style="font-size:0.8rem;color:#dc2626;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                                         title="{{ row[3] }}">
+                                        {{ row[3] if row[3] else '—' }}
+                                    </div>
+                                </td>
+
+                                <td style="color:var(--text-muted);font-size:0.82rem;white-space:nowrap;">
+                                    {{ row[4] }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <div style="font-size:3.5rem;opacity:0.25;">📊</div>
+            <h4 style="margin-top:1rem;font-weight:700;">No History Yet</h4>
+            <p style="color:var(--text-muted);margin-top:0.5rem;">
+                You haven't run any analyses yet.<br>
+                Start by filling the resume form or uploading a PDF!
+            </p>
+            <div class="d-flex gap-3 justify-content-center mt-3">
+                <a href="{{ url_for('resume_form') }}" class="btn btn-primary">
+                    <i class="bi bi-file-text me-1"></i>Fill Resume Form
+                </a>
+                <a href="{{ url_for('upload_pdf') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-upload me-1"></i>Upload PDF
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

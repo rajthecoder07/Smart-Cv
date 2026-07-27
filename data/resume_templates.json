@@ -1,0 +1,74 @@
+[
+  {
+    "id": "professional-sidebar",
+    "name": "Professional Sidebar",
+    "description": "Dark navy sidebar with contact, skills & language ratings. Clean two-column layout ideal for corporate roles.",
+    "category": "Professional",
+    "preview_image": "/static/previews/template-professional.png",
+    "features": ["Professional Look", "ATS-Friendly", "Photo Support", "Multiple Languages"],
+    "html_file": "resume_template_sidebar.html"
+  },
+  {
+    "id": "modern-teal",
+    "name": "Modern Teal",
+    "description": "Vibrant teal header with two-column body. Perfect for creative professionals who want a modern edge.",
+    "category": "Modern",
+    "preview_image": "/static/previews/template-modern.png",
+    "features": ["Modern Style", "Photo Support", "Easy Customization"],
+    "html_file": "resume_template_modern.html"
+  },
+  {
+    "id": "dark-executive",
+    "name": "Dark Executive",
+    "description": "Bold dark header with gold accents. Premium executive look designed for senior professionals.",
+    "category": "Creative",
+    "preview_image": "/static/previews/template-executive.png",
+    "features": ["Professional Look", "Photo Support", "Bold Header"],
+    "html_file": "resume_template_header.html"
+  },
+  {
+    "id": "minimal-classic",
+    "name": "Minimal Classic",
+    "description": "Ultra-clean single-column layout. Zero distractions, maximum ATS compatibility.",
+    "category": "Simple",
+    "preview_image": "/static/previews/template-minimal.png",
+    "features": ["ATS-Friendly", "Minimal Design", "Easy Customization"],
+    "html_file": "resume_template_minimal.html"
+  },
+  {
+    "id": "creative-purple",
+    "name": "Creative Purple",
+    "description": "Deep indigo sidebar with elegant purple accents. Stand out with this designer-crafted creative template.",
+    "category": "Creative",
+    "preview_image": "/static/previews/template-creative.png",
+    "features": ["Creative Design", "Photo Support", "Multiple Languages"],
+    "html_file": "resume_template_modern_v2.html"
+  },
+  {
+    "id": "corporate-blue",
+    "name": "Corporate Blue",
+    "description": "Sharp two-column layout with blue accents and star-rated skills. Ideal for finance and business roles.",
+    "category": "Professional",
+    "preview_image": "/static/previews/template-corporate.png",
+    "features": ["Professional Look", "ATS-Friendly", "Easy Customization"],
+    "html_file": "resume_template_sidebar.html"
+  },
+  {
+    "id": "elegant-green",
+    "name": "Elegant Green",
+    "description": "Forest green header with timeline experience layout. Elegant and fresh for modern job seekers.",
+    "category": "Modern",
+    "preview_image": "/static/previews/template-elegant.png",
+    "features": ["Modern Style", "Photo Support", "ATS-Friendly", "Easy Customization"],
+    "html_file": "resume_template_modern.html"
+  },
+  {
+    "id": "tech-dark",
+    "name": "Tech Dark",
+    "description": "Dark-mode developer resume with teal highlights and code-inspired typography. Built for engineers.",
+    "category": "Creative",
+    "preview_image": "/static/previews/template-tech.png",
+    "features": ["Creative Design", "Modern Style", "Easy Customization"],
+    "html_file": "resume_template_modern_v2.html"
+  }
+]

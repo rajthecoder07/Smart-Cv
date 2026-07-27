@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1rem;">
+
+    <!-- Back link -->
+    <a href="{{ url_for('dashboard') }}"
+       style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none; display: block; margin-bottom: 1.5rem;">
+        ← Back to Dashboard
+    </a>
+
+    {% set data = session.get('analysis') %}
+
+    {% if data and data.target_result %}
+        {% set result = data.target_result %}
+        {% set score = result.score %}
+
+        <!-- =====================================================
+             SCORE HEADER SECTION
+             ===================================================== -->
+        <div class="row g-4 mb-5">
+
+            <!-- Score Circle -->
+            <div class="col-md-4 text-center fade-in">
+
+                {% if score >= 70 %}
+                    {% set circle_class = 'score-excellent' %}
+                    {% set score_label_color = 'var(--success)' %}
+                    {% set verdict = '🎉 Excellent Match!' %}
+                {% elif score >= 50 %}
+                    {% set circle_class = 'score-good' %}
+                    {% set score_label_color = 'var(--primary)' %}
+                    {% set verdict = '✅ Good Match' %}
+                {% elif score >= 30 %}
+                    {% set circle_class = 'score-average' %}
+                    {% set score_label_color = 'var(--warning)' %}
+                    {% set verdict = '📈 Average Match' %}
+                {% else %}
+                    {% set circle_class = 'score-poor' %}
+                    {% set score_label_color = 'var(--danger)' %}
+                    {% set verdict = '📚 Needs Work' %}
+                {% endif %}
+
+                <div class="score-circle {{ circle_class }} animate-pulse"
+                     style="--pct: {{ score }}%;">
+                    <div class="score-number">{{ score }}</div>
+                    <div class="score-label">/ 100</div>
+                </div>
+
+                <div style="margin-top: 1.25rem;">
+                    <div style="font-size: 1.1rem; font-weight: 700; color: {{ score_label_color }};">
+                        {{ verdict }}
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">
+                        Job Match Score
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Info + Score Breakdown -->
+            <div class="col-md-8 fade-in">
+                <div class="card h-100">
+                    <div class="card-body" style="padding: 1.75rem;">
+
+                        <div style="font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.3rem;">
+                            Target Job Role
+                        </div>
+                        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            {{ result.job_title }}
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                            {{ result.description }}
+                        </p>
+
+                        <!-- Score bar -->
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="progress flex-grow-1">
+                                <div class="progress-bar"
+                                     data-width="{{ score }}"
+                                     style="background: {% if score >= 70 %}var(--success){% elif score >= 50 %}var(--primary){% elif score >= 30 %}var(--warning){% else %}var(--danger){% endif %}; width: 0%;">
+                                </div>
+                            </div>
+                            <span style="font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem; color: {{ score_label_color }};">
+                                {{ score }}%
+                            </span>
+                        </div>
+
+                        <!-- Stats row -->
+                        <div class="row g-3 mt-1">
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number" style="color: var(--success);">
+                                        {{ result.matched | length }}
+                                    </div>
+                                    <div class="stat-label">Skills Matched</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number" style="color: var(--danger);">
+                                        {{ result.missing | length }}
+                                    </div>
+                                    <div class="stat-label">Skills Missing</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">
+                                        {{ result.total_required if result.total_required is defined else (result.matched | length) + (result.missing | length) }}
+                                    </div>
+                                    <div class="stat-label">Total Required</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- =====================================================
+             SKILLS BREAKDOWN
+             ===================================================== -->
+        <div class="row g-4 mb-5">
+
+            <!-- Matched Skills -->
+            <div class="col-md-6 fade-in">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0" style="font-weight: 700; color: var(--success);">
+                            ✅ Skills You Have ({{ result.matched | length }})
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% if result.matched %}
+                            {% for skill in result.matched %}
+                            <span class="skill-badge skill-matched">{{ skill }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: var(--text-muted); font-size: 0.88rem;">
+                                No matching skills found. Make sure you've listed all your skills.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Missing Skills -->
+            <div class="col-md-6 fade-in">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0" style="font-weight: 700; color: var(--danger);">
+                            ❌ Skills to Learn ({{ result.missing | length }})
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% if result.missing %}
+                            {% for skill in result.missing %}
+                            <span class="skill-badge skill-missing">{{ skill }}</span>
+                            {% endfor %}
+                            <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(239,68,68,0.05); border-radius: 8px; font-size: 0.83rem; color: var(--text-muted);">
+                                💡 <strong>Tip:</strong> Focus on the top missing skills to quickly improve your score!
+                                Search for free courses on YouTube, Coursera, or freeCodeCamp.
+                            </div>
+                        {% else %}
+                            <p style="color: var(--success); font-size: 0.88rem; font-weight: 600;">
+                                🎉 Amazing! You have all required skills for this role!
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CAREER ADVICE
+             ===================================================== -->
+        <div class="card mb-5 fade-in">
+            <div class="card-header">
+                <h6 class="mb-0" style="font-weight: 700;">
+                    💡 Personalized Career Advice
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if score >= 70 %}
+                <div style="color: #6ee7b7;">
+                    <strong>You're in great shape!</strong> With a {{ score }}% match, you are a strong candidate for {{ result.job_title }}.
+                    Here's what to do next:
+                    <ul style="margin-top: 0.75rem; color: var(--text-muted);">
+                        <li>Start applying on LinkedIn, Naukri, and company websites</li>
+                        <li>Polish your resume formatting and highlight top skills</li>
+                        <li>Prepare for technical interviews with practice problems</li>
+                        <li>Build 1-2 portfolio projects to showcase your skills</li>
+                    </ul>
+                </div>
+                {% elif score >= 50 %}
+                <div style="color: #99f6e4;">
+                    <strong>Good progress!</strong> A {{ score }}% match means you have a solid foundation.
+                    To improve:
+                    <ul style="margin-top: 0.75rem; color: var(--text-muted);">
+                        <li>Focus on the {{ result.missing | length }} missing skills listed above</li>
+                        <li>Take 1-2 short online courses on the most critical missing skills</li>
+                        <li>Build a project that uses as many required skills as possible</li>
+                        <li>You're close — keep learning and apply in 1–2 months</li>
+                    </ul>
+                </div>
+                {% elif score >= 30 %}
+                <div style="color: #fcd34d;">
+                    <strong>Keep building!</strong> A {{ score }}% match shows potential but more learning is needed.
+                    Action plan:
+                    <ul style="margin-top: 0.75rem; color: var(--text-muted);">
+                        <li>Pick the top 3 missing skills and dedicate 30 days to each</li>
+                        <li>Use YouTube, freeCodeCamp, or Udemy for free/cheap courses</li>
+                        <li>Look for internships to gain practical experience</li>
+                        <li>Re-analyze your resume after adding more skills</li>
+                    </ul>
+                </div>
+                {% else %}
+                <div style="color: #fca5a5;">
+                    <strong>Just getting started!</strong> A {{ score }}% match means there's a big learning journey ahead — and that's okay!
+                    Start here:
+                    <ul style="margin-top: 0.75rem; color: var(--text-muted);">
+                        <li>Make a list of all missing skills — start with the most fundamental ones</li>
+                        <li>Spend 6 months building core technical skills before applying</li>
+                        <li>Consider internships, college clubs, or personal projects to build experience</li>
+                        <li>Re-run this analysis every month to track your progress</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- =====================================================
+             ALL JOB MATCHES
+             ===================================================== -->
+        <div class="card mb-5 fade-in">
+            <div class="card-header">
+                <h6 class="mb-0" style="font-weight: 700;">
+                    📊 All Job Match Scores (Top 6)
+                </h6>
+            </div>
+            <div class="card-body" style="padding: 1.25rem;">
+                {% if data.all_scores %}
+                    {% for job in data.all_scores %}
+                    <div class="job-match-card">
+                        <div class="d-flex align-items-center gap-3">
+
+                            {% if job.score >= 70 %}
+                            <span class="score-pill" style="background: rgba(16,185,129,0.15); color: var(--success);">{{ job.score }}%</span>
+                            {% elif job.score >= 50 %}
+                            <span class="score-pill" style="background: rgba(13,148,136,0.15); color: var(--primary);">{{ job.score }}%</span>
+                            {% elif job.score >= 30 %}
+                            <span class="score-pill" style="background: rgba(245,158,11,0.15); color: var(--warning);">{{ job.score }}%</span>
+                            {% else %}
+                            <span class="score-pill" style="background: rgba(239,68,68,0.15); color: var(--danger);">{{ job.score }}%</span>
+                            {% endif %}
+
+                            <div class="flex-grow-1">
+                                <div style="font-weight: 600; font-size: 0.95rem;">{{ job.job_title }}</div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                    {{ job.matched | length }} / {{ job.total_required if job.total_required is defined else (job.matched | length) + (job.missing | length) }} skills matched
+                                </div>
+                            </div>
+
+                            <div style="width: 120px;">
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar" data-width="{{ job.score }}"
+                                         style="background: {% if job.score >= 70 %}var(--success){% elif job.score >= 50 %}var(--primary){% elif job.score >= 30 %}var(--warning){% else %}var(--danger){% endif %}; width: 0%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: var(--text-muted); font-size: 0.88rem;">No job matches found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-3 flex-wrap justify-content-center">
+            <a href="{{ url_for('resume_form') }}" class="btn btn-primary">
+                <i class="bi bi-arrow-repeat me-2"></i>Re-Analyze
+            </a>
+            <a href="{{ url_for('upload_pdf') }}" class="btn btn-outline-primary">
+                <i class="bi bi-file-earmark-pdf me-2"></i>Try with PDF
+            </a>
+            <a href="{{ url_for('history') }}" class="btn btn-outline-primary">
+                <i class="bi bi-clock-history me-2"></i>View History
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-primary">
+                <i class="bi bi-printer me-2"></i>Print Results
+            </button>
+        </div>
+
+
+    {% else %}
+    <!-- No data state -->
+    <div class="text-center py-5">
+        <div style="font-size: 3rem;">❌</div>
+        <h3 style="margin-top: 1rem;">No Results Found</h3>
+        <p style="color: var(--text-muted);">Please complete the resume form or upload a PDF first.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-2">Go to Dashboard</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

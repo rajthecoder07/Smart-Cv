@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}SmartCV — Analyze Your Resume with AI{% endblock %}
+
+{% block content %}
+
+
+<section class="hero-section">
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row align-items-center">
+            
+            <!-- Left column: headline + CTA buttons -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="fade-in">
+                    <span class="badge mb-3 px-3 py-2"
+                          style="background: rgba(13,148,136,0.15); color: var(--primary); font-size: 0.8rem; border-radius: 20px; border: 1px solid rgba(13,148,136,0.3);">
+                        ✦ AI-Powered Resume Analysis
+                    </span>
+                    <h1 class="hero-title">
+                        Land Your Dream Job with
+                        <span class="highlight"> Smart</span>CV
+                    </h1>
+                    <p class="hero-subtitle">
+                        Upload your resume or fill in your details. Get an instant job match score,
+                        discover missing skills, and know exactly what to learn next.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap mt-4">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                            Start Analyzing Free →
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                            Sign In
+                        </a>
+                    </div>
+                    <!-- Quick stats row -->
+                    <div class="d-flex gap-4 mt-4 flex-wrap">
+                        <div>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">12+</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Job Categories</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent);">100+</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Skills Tracked</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">Free</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">No Credit Card</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: a visual preview card -->
+            <div class="col-lg-5 offset-lg-1">
+                <div class="hero-card fade-in">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">📄</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.9rem;">resume_john_doe.pdf</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Analyzing...</div>
+                        </div>
+                        <span class="ms-auto badge" style="background: rgba(16,185,129,0.2); color: var(--success);">✓ Complete</span>
+                    </div>
+                    
+                    <!-- Mock score preview -->
+                    <div class="text-center my-3">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Best Job Match</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">Software Engineer</div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="progress flex-grow-1" style="height: 8px;">
+                                <div class="progress-bar" style="width: 78%; background: var(--primary);"></div>
+                            </div>
+                            <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary); font-size: 1.1rem;">78%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mock matched skills -->
+                    <div style="margin-top: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem;">Matched Skills</div>
+                        <div>
+                            <span class="skill-badge skill-matched">python</span>
+                            <span class="skill-badge skill-matched">sql</span>
+                            <span class="skill-badge skill-matched">git</span>
+                            <span class="skill-badge skill-missing">java</span>
+                            <span class="skill-badge skill-missing">algorithms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<section style="padding: 5rem 0;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-size: 2rem; font-weight: 700;">How SmartCV Works</h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">Three simple steps to understand your job readiness</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Step 1 -->
+            <div class="col-md-4 fade-in">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto" style="background: rgba(13,148,136,0.15);">
+                        <span>📝</span>
+                    </div>
+                    <div class="mb-2" style="font-size: 0.75rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Step 1</div>
+                    <h5 style="font-weight: 700;">Enter Your Resume</h5>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Fill in the resume form with your skills, experience, and education — or simply upload your existing PDF resume.
+                    </p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="col-md-4 fade-in">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto" style="background: rgba(245,158,11,0.15);">
+                        <span>🤖</span>
+                    </div>
+                    <div class="mb-2" style="font-size: 0.75rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Step 2</div>
+                    <h5 style="font-weight: 700;">AI Analyzes Your Profile</h5>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Our keyword-matching AI compares your skills against 12+ job categories and finds the best matching roles for you.
+                    </p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="col-md-4 fade-in">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto" style="background: rgba(16,185,129,0.15);">
+                        <span>📊</span>
+                    </div>
+                    <div class="mb-2" style="font-size: 0.75rem; color: var(--success); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Step 3</div>
+                    <h5 style="font-weight: 700;">Get Your Score + Gaps</h5>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                        See your match score out of 100, view matched skills, and get a list of missing skills you should learn to qualify.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding: 4rem 0 5rem; background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, rgba(245,158,11,0.06) 50%, rgba(13,148,136,0.05) 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <h2 style="font-size: 1.8rem; font-weight: 700;">Everything You Need to Prepare for Your Next Role</h2>
+                <p style="color: var(--text-muted); margin-top: 0.75rem;">
+                    SmartCV gives college students and fresh graduates clear, actionable feedback on how ready they are for the job market.
+                </p>
+                <div class="mt-4 d-flex flex-column gap-3">
+                    <!-- Feature list items -->
+                    {% set features = [
+                        ('bi-check2-circle', 'var(--success)',  'Keyword-based skill matching'),
+                        ('bi-file-earmark-pdf', 'var(--primary)', 'PDF resume text extraction'),
+                        ('bi-graph-up', 'var(--accent)', 'Score out of 100 for each job'),
+                        ('bi-lightbulb', 'var(--primary)', 'Missing skill suggestions'),
+                        ('bi-clock-history', 'var(--text-muted)', 'History of all your analyses'),
+                        ('bi-person-lock', 'var(--success)', 'Secure login with hashed passwords'),
+                    ] %}
+                    {% for icon, color, text in features %}
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi {{ icon }}" style="color: {{ color }}; font-size: 1.1rem; flex-shrink: 0;"></i>
+                        <span style="font-size: 0.95rem;">{{ text }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">
+                        Create Free Account →
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 offset-lg-1">
+                <!-- Job categories grid -->
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">Jobs We Match Against</div>
+                <div class="row g-2">
+                    {% set jobs = [
+                        ('💻', 'Software Engineer'),
+                        ('📊', 'Data Scientist'),
+                        ('🌐', 'Web Developer'),
+                        ('⚙️', 'DevOps Engineer'),
+                        ('📱', 'Android Developer'),
+                        ('📈', 'Data Analyst'),
+                        ('🤖', 'ML Engineer'),
+                        ('🎨', 'Frontend Developer'),
+                        ('🔧', 'Backend Developer'),
+                        ('🔒', 'Cybersecurity Analyst'),
+                        ('☁️', 'Cloud Engineer'),
+                        ('🔗', 'Full Stack Developer'),
+                    ] %}
+                    {% for emoji, title in jobs %}
+                    <div class="col-6">
+                        <div style="background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.2); border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; cursor: default;" onmouseover="this.style.background='rgba(13,148,136,0.18)'" onmouseout="this.style.background='rgba(13,148,136,0.08)'">
+                            <span>{{ emoji }}</span>
+                            <span>{{ title }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section style="padding: 5rem 0;">
+    <div class="container text-center">
+        <h2 style="font-size: 2rem; font-weight: 700;">Ready to Analyze Your Resume?</h2>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">Free to use. No credit card needed. Results in seconds.</p>
+        <div class="d-flex gap-3 justify-content-center mt-4 flex-wrap">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                Create Free Account
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                I Already Have an Account
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{
+  "templates": [
+    {
+      "id": "modern-professional",
+      "name": "Modern Professional",
+      "description": "Contemporary design with clean typography and professional layout",
+      "category": "Professional",
+      "layout": "two-column",
+      "colors": {
+        "primary": "#0ea5e9",
+        "accent": "#06b6d4",
+        "dark": "#1e293b",
+        "text": "#334155"
+      },
+      "features": ["Modern Design", "Two-Column Layout", "Photo Support", "ATS Friendly"],
+      "sections": {
+        "header": {
+          "name": true,
+          "title": true,
+          "email": true,
+          "phone": true,
+          "location": true,
+          "profileImage": true,
+          "profile": true
+        },
+        "body": {
+          "experience": true,
+          "education": true,
+          "skills": true,
+          "languages": true,
+          "projects": false,
+          "certifications": false
+        }
+      },
+      "htmlFile": "resume_template_modern.html"
+    },
+    {
+      "id": "sidebar-professional",
+      "name": "Sidebar Professional",
+      "description": "Classic design with dark sidebar containing contact and skills",
+      "category": "Professional",
+      "layout": "sidebar",
+      "colors": {
+        "primary": "#2c3e50",
+        "accent": "#3498db",
+        "dark": "#1a252f",
+        "text": "#2c3e50"
+      },
+      "features": ["Professional Look", "Sidebar Layout", "Photo Support", "ATS Friendly"],
+      "sections": {
+        "header": {
+          "name": true,
+          "title": true,
+          "email": true,
+          "phone": true,
+          "location": true,
+          "profileImage": true
+        },
+        "sidebar": {
+          "skills": true,
+          "languages": true,
+          "contact": true
+        },
+        "body": {
+          "profile": true,
+          "experience": true,
+          "education": true,
+          "certifications": false
+        }
+      },
+      "htmlFile": "resume_template_sidebar.html"
+    },
+    {
+      "id": "minimalist-clean",
+      "name": "Minimalist Clean",
+      "description": "Clean minimal design with excellent readability and ATS optimization",
+      "category": "Professional",
+      "layout": "single-column",
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#6b7280",
+        "dark": "#111827",
+        "text": "#374151"
+      },
+      "features": ["Minimal Design", "Best for ATS", "High Readability"],
+      "sections": {
+        "header": {
+          "name": true,
+          "title": true,
+          "email": true,
+          "phone": true,
+          "location": true,
+          "profileImage": false
+        },
+        "body": {
+          "profile": true,
+          "experience": true,
+          "education": true,
+          "skills": true,
+          "languages": true
+        }
+      },
+      "htmlFile": "resume_template_minimal.html"
+    },
+    {
+      "id": "premium-header",
+      "name": "Premium Header",
+      "description": "Premium design with bold header and modern styling",
+      "category": "Premium",
+      "layout": "header-focused",
+      "colors": {
+        "primary": "#7c3aed",
+        "accent": "#a855f7",
+        "dark": "#5b21b6",
+        "text": "#1e1b4b"
+      },
+      "features": ["Premium Style", "Bold Header", "Photo Support"],
+      "sections": {
+        "header": {
+          "name": true,
+          "title": true,
+          "email": true,
+          "phone": true,
+          "location": true,
+          "profileImage": true,
+          "profile": true
+        },
+        "body": {
+          "experience": true,
+          "education": true,
+          "skills": true,
+          "languages": true,
+          "projects": true,
+          "certifications": false
+        }
+      },
+      "htmlFile": "resume_template_header.html"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Career Chat — SmartCV{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <h1 class="mb-2">AI Career Chat</h1>
+      <p class="text-muted mb-0">Ask questions about your resume, job search, interview prep, career growth, and more.</p>
+    </div>
+    <a href="{{ url_for('chat', clear=1) }}" class="btn btn-outline-secondary align-self-stretch">New Conversation</a>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      {% if messages %}
+      <div class="chat-area">
+        {% for msg in messages %}
+        <div class="chat-bubble chat-{{ msg.role }}">
+          <div class="chat-label">{{ 'You' if msg.role == 'user' else 'Career Coach' }}</div>
+          <div class="chat-text">{{ msg.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info mb-0">
+        Start the conversation by asking a question about your resume or career path.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="post">
+    <div class="mb-3">
+      <label for="message" class="form-label">Your message</label>
+      <textarea id="message" name="message" class="form-control" rows="5" placeholder="Type your career question here..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send Message</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.chat-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.chat-bubble {
+  max-width: 100%;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.chat-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.chat-user {
+  align-self: flex-end;
+  background: #e7f5ff;
+  border-color: #cfe2ff;
+}
+.chat-assistant {
+  align-self: flex-start;
+  background: #f8fafc;
+  border-color: #d1d5db;
+}
+</style>
+{% endblock %}

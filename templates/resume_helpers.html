@@ -1,0 +1,261 @@
+import os
+import json
+import base64
+from datetime import datetime
+from werkzeug.utils import secure_filename
+
+
+# ================= RESUME TABLE INIT =================
+
+def init_resume_tables(cursor):
+    """Create resume tables if they don't exist."""
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS resumes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            template_id TEXT NOT NULL,
+            title TEXT DEFAULT 'My Resume',
+            resume_data TEXT DEFAULT '{}',
+            created_at TEXT,
+            updated_at TEXT
+        )
+    ''')
+
+
+# ================= CRUD =================
+
+def create_resume(cursor, conn, username, template_id, resume_data=None):
+    """Create a new resume and return its ID."""
+    try:
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        data = json.dumps(resume_data or {})
+        cursor.execute('''
+            INSERT INTO resumes (username, template_id, title, resume_data, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (username, template_id, 'My Resume', data, now, now))
+        conn.commit()
+        return cursor.lastrowid
+    except Exception as e:
+        print(f"[CREATE RESUME ERROR]: {e}")
+        return None
+
+
+def get_resume(cursor, resume_id):
+    """Fetch a single resume by ID."""
+    try:
+        cursor.execute('SELECT * FROM resumes WHERE id = ?', (resume_id,))
+        row = cursor.fetchone()
+        if not row:
+            return None
+        return {
+            'id':          row[0],
+            'username':    row[1],
+            'template_id': row[2],
+            'title':       row[3],
+            'resume_data': json.loads(row[4] or '{}'),
+            'created_at':  row[5],
+            'updated_at':  row[6],
+        }
+    except Exception as e:
+        print(f"[GET RESUME ERROR]: {e}")
+        return None
+
+
+def update_resume(cursor, conn, resume_id, resume_data, title=None):
+    """Update resume data (and optionally title)."""
+    try:
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        data = json.dumps(resume_data)
+        if title:
+            cursor.execute('''
+                UPDATE resumes SET resume_data = ?, title = ?, updated_at = ? WHERE id = ?
+            ''', (data, title, now, resume_id))
+        else:
+            cursor.execute('''
+                UPDATE resumes SET resume_data = ?, updated_at = ? WHERE id = ?
+            ''', (data, now, resume_id))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"[UPDATE RESUME ERROR]: {e}")
+        return False
+
+
+def get_user_resumes(cursor, username):
+    """Get all resumes for a user."""
+    try:
+        cursor.execute('''
+            SELECT id, username, template_id, title, updated_at
+            FROM resumes WHERE username = ? ORDER BY id DESC
+        ''', (username,))
+        rows = cursor.fetchall()
+        return [
+            {
+                'id':          r[0],
+                'username':    r[1],
+                'template_id': r[2],
+                'title':       r[3],
+                'updated_at':  r[4],
+            }
+            for r in rows
+        ]
+    except Exception as e:
+        print(f"[GET USER RESUMES ERROR]: {e}")
+        return []
+
+
+def delete_resume(cursor, conn, resume_id):
+    """Delete a resume."""
+    try:
+        cursor.execute('DELETE FROM resumes WHERE id = ?', (resume_id,))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"[DELETE RESUME ERROR]: {e}")
+        return False
+
+
+# ================= RESUME BUILDER CLASS =================
+
+class ResumeBuilder:
+    def __init__(self, base_dir):
+        self.base_dir = base_dir
+
+    def load_template_config(self):
+        """Load templates from JSON or return defaults."""
+        path = os.path.join(self.base_dir, 'data', 'resume_templates.json')
+        try:
+            with open(path, 'r') as f:
+                return json.load(f)
+        except Exception:
+            # Default templates if JSON missing
+            return [
+                {
+                    'id': 'sidebar-professional',
+                    'name': 'Sidebar Professional',
+                    'description': 'Classic design with dark blue sidebar containing contact, skills, and languages',
+                    'preview_image': '/static/previews/sidebar.png',
+                    'features': ['Professional Look', 'ATS-Friendly', 'Photo Support'],
+                    'html_file': 'resume_template_sidebar.html'
+                },
+                {
+                    'id': 'modern-clean',
+                    'name': 'Modern Clean',
+                    'description': 'Contemporary design with teal accents and clean typography',
+                    'preview_image': '/static/previews/modern.png',
+                    'features': ['Modern Style', 'Two-Column Layout', 'Photo Support'],
+                    'html_file': 'resume_template_modern.html'
+                },
+                {
+                    'id': 'minimal',
+                    'name': 'Minimal',
+                    'description': 'Clean and simple one-column layout focused on content',
+                    'preview_image': '/static/previews/minimal.png',
+                    'features': ['Minimal Design', 'ATS-Friendly', 'Easy to Read'],
+                    'html_file': 'resume_template_minimal.html'
+                },
+            ]
+
+    def load_form_fields(self):
+        """Return form field definitions."""
+        return {
+            'personal': [
+                {'name': 'fullName',    'label': 'Full Name',      'type': 'text',  'required': True},
+                {'name': 'jobTitle',    'label': 'Job Title',       'type': 'text',  'required': False},
+                {'name': 'email',       'label': 'Email',           'type': 'email', 'required': True},
+                {'name': 'phone',       'label': 'Phone',           'type': 'tel',   'required': False},
+                {'name': 'location',    'label': 'Location',        'type': 'text',  'required': False},
+                {'name': 'linkedin',    'label': 'LinkedIn URL',    'type': 'url',   'required': False},
+                {'name': 'github',      'label': 'GitHub URL',      'type': 'url',   'required': False},
+                {'name': 'summary',     'label': 'Professional Summary', 'type': 'textarea', 'required': False},
+            ],
+            'experience': [
+                {'name': 'jobTitle',   'label': 'Job Title',    'type': 'text', 'required': True},
+                {'name': 'company',    'label': 'Company',      'type': 'text', 'required': True},
+                {'name': 'startDate',  'label': 'Start Date',   'type': 'text', 'required': False},
+                {'name': 'endDate',    'label': 'End Date',     'type': 'text', 'required': False},
+                {'name': 'current',    'label': 'Currently Working Here', 'type': 'checkbox', 'required': False},
+                {'name': 'description','label': 'Description',  'type': 'textarea', 'required': False},
+            ],
+            'education': [
+                {'name': 'degree',     'label': 'Degree',       'type': 'text', 'required': True},
+                {'name': 'school',     'label': 'School',       'type': 'text', 'required': True},
+                {'name': 'startDate',  'label': 'Start Date',   'type': 'text', 'required': False},
+                {'name': 'endDate',    'label': 'End Date',     'type': 'text', 'required': False},
+                {'name': 'grade',      'label': 'Grade / GPA',  'type': 'text', 'required': False},
+            ],
+            'skills': [
+                {'name': 'name',  'label': 'Skill Name', 'type': 'text',  'required': True},
+                {'name': 'level', 'label': 'Level (1-5)', 'type': 'number', 'required': False},
+            ],
+            'languages': [
+                {'name': 'language',    'label': 'Language',    'type': 'text',   'required': True},
+                {'name': 'proficiency', 'label': 'Proficiency', 'type': 'select', 'required': False,
+                 'options': ['Beginner', 'Elementary', 'Intermediate', 'Advanced', 'Native']},
+            ],
+        }
+
+    def get_template_html_file(self, template_id):
+        """Return the HTML template filename for a given template ID."""
+        mapping = {
+            'sidebar-professional': 'resume_template_sidebar.html',
+            'modern-clean':         'resume_template_modern.html',
+            'modern-v2':            'resume_template_modern_v2.html',
+            'minimal':              'resume_template_minimal.html',
+            'header':               'resume_template_header.html',
+        }
+        # Also check from JSON config
+        templates = self.load_template_config()
+        for t in templates:
+            if t['id'] == template_id:
+                return t.get('html_file', mapping.get(template_id))
+        return mapping.get(template_id)
+
+    def format_resume_data_for_template(self, resume_data):
+        """Format raw resume_data dict into variables for Jinja2 template."""
+        personal   = resume_data.get('personal',   {})
+        experience = resume_data.get('experience', [])
+        education  = resume_data.get('education',  [])
+        skills     = resume_data.get('skills',     [])
+        languages  = resume_data.get('languages',  [])
+        projects   = resume_data.get('projects',   [])
+        certifications = resume_data.get('certifications', [])
+
+        return {
+            'personal':       personal,
+            'experience':     experience,
+            'education':      education,
+            'skills':         skills,
+            'languages':      languages,
+            'projects':       projects,
+            'certifications': certifications,
+            'full_name':      personal.get('fullName', ''),
+            'job_title':      personal.get('jobTitle', ''),
+            'email':          personal.get('email', ''),
+            'phone':          personal.get('phone', ''),
+            'location':       personal.get('location', ''),
+            'linkedin':       personal.get('linkedin', ''),
+            'github':         personal.get('github', ''),
+            'summary':        personal.get('summary', ''),
+            'profile_image':  personal.get('profileImage', ''),
+        }
+
+    def process_profile_image(self, file, resume_id, username):
+        """Convert uploaded image to base64 string."""
+        try:
+            allowed = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+            ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+            if ext not in allowed:
+                return None, 'Invalid image format. Use PNG, JPG, or GIF.'
+
+            file_bytes = file.read()
+            if len(file_bytes) > 2 * 1024 * 1024:
+                return None, 'Image too large. Max 2MB allowed.'
+
+            mime = f'image/{ext}' if ext != 'jpg' else 'image/jpeg'
+            b64 = base64.b64encode(file_bytes).decode('utf-8')
+            return f'data:{mime};base64,{b64}', None
+
+        except Exception as e:
+            print(f"[IMAGE PROCESS ERROR]: {e}")
+            return None, 'Failed to process image.'

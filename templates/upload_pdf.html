@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload PDF — SmartCV{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 650px; padding: 3rem 1rem;">
+
+    <div class="mb-4">
+        <a href="{{ url_for('dashboard') }}" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">
+            ← Back to Dashboard
+        </a>
+        <h1 style="font-size: 1.75rem; font-weight: 700; margin-top: 0.75rem;">
+            📄 Upload PDF Resume
+        </h1>
+        <p style="color: var(--text-muted); margin-top: 0.25rem; font-size: 0.95rem;">
+            Upload your existing PDF resume. Gemini AI will analyze it intelligently.
+        </p>
+    </div>
+
+    <div class="alert" style="background: rgba(245,158,11,0.1); border-left: 3px solid var(--accent); color: #fcd34d; font-size: 0.88rem; margin-bottom: 1.5rem;">
+        <strong>⚠️ PDF Requirements:</strong>
+        Must be a <strong>text-based PDF</strong> (not a scanned image).
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} mb-3">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <div class="card-body" style="padding: 2rem;">
+
+            <form action="{{ url_for('upload_pdf') }}" method="POST"
+                  enctype="multipart/form-data" class="show-loading">
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>Select Your Resume PDF
+                    </label>
+
+                    <div class="upload-zone" id="uploadZone"
+                        onclick="document.getElementById('resume_pdf').click()"
+                        ondragover="event.preventDefault(); this.style.borderColor='var(--primary)'; this.style.background='rgba(13,148,136,0.08)'"
+                        ondragleave="this.style.borderColor=''; this.style.background=''"
+                        ondrop="handleDrop(event)"
+                        style="cursor: pointer;">
+                        <span class="upload-icon">📂</span>
+                        <div id="uploadText">
+                            <strong>Click to browse</strong> or drag & drop your PDF here
+                        </div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+                            Only PDF · Max 10MB
+                        </div>
+                    </div>
+
+                    <input type="file" id="resume_pdf" name="resume_pdf"
+                           accept=".pdf" style="display: none;" required
+                           onchange="showFileName(this)">
+                </div>
+
+                <div class="p-3 rounded mb-4"
+                     style="background: rgba(13,148,136,0.05); border: 1px solid rgba(13,148,136,0.2);">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
+                        🤖 What happens when you upload?
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        {% set steps = [
+                            ('1', '📄 PDF text is extracted using pdfplumber'),
+                            ('2', '🤖 Gemini AI reads and understands your resume'),
+                            ('3', '🎯 Best matching jobs are intelligently identified'),
+                            ('4', '📊 Score, matched & missing skills are generated'),
+                        ] %}
+                        {% for num, step in steps %}
+                        <div style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--text-muted);">
+                            <span style="color: var(--primary); font-weight: 700;">{{ num }}.</span>
+                            {{ step }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <span style="background: rgba(13,148,136,0.1); color: var(--primary); border: 1px solid rgba(13,148,136,0.3); border-radius: 20px; padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 600;">
+                        ✨ Powered by Gemini AI — No keyword guessing, real intelligence!
+                    </span>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100 btn-lg">
+                    <i class="bi bi-upload me-2"></i>Upload & Analyze with AI
+                </button>
+
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{{ url_for('resume_form') }}" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">
+                    Don't have a PDF? → Fill the form instead
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showFileName(input) {
+    const uploadText = document.getElementById('uploadText');
+    const uploadZone = document.getElementById('uploadZone');
+    if (input.files && input.files[0]) {
+        uploadText.innerHTML = `✅ <strong>${input.files[0].name}</strong> selected`;
+        uploadZone.style.borderColor = 'var(--primary)';
+        uploadZone.style.background = 'rgba(13,148,136,0.08)';
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') {
+        const input = document.getElementById('resume_pdf');
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        showFileName(input);
+    }
+    e.currentTarget.style.borderColor = '';
+    e.currentTarget.style.background = '';
+}
+</script>
+
+{% endblock %}

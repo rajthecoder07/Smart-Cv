@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal.fullName }} - {{ personal.title }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .resume-container {
+            max-width: 8.5in;
+            height: 11in;
+            background: white;
+            margin: 0 auto;
+            padding: 30px 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        /* Header with name and photo */
+        .resume-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1e7e9c;
+        }
+        
+        .header-text h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        .header-text h2 {
+            font-size: 13px;
+            color: #1e7e9c;
+            font-weight: 600;
+            margin: 3px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .profile-image {
+            width: 100px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 2px;
+            background: #e5e7eb;
+        }
+        
+        /* Two-column layout */
+        .resume-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+        
+        /* Section styling */
+        .resume-section {
+            margin-bottom: 15px;
+        }
+        
+        .resume-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e7e9c;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #1e7e9c;
+        }
+        
+        .section-item {
+            margin-bottom: 10px;
+            font-size: 10.5px;
+            line-height: 1.5;
+        }
+        
+        .item-title {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+        
+        .item-subtitle {
+            color: #6b7280;
+            font-size: 10px;
+            margin-bottom: 2px;
+            font-style: italic;
+        }
+        
+        .item-description {
+            color: #374151;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+        
+        .skill-item {
+            display: inline-block;
+            background: #f0f9ff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin: 2px 2px 2px 0;
+            font-size: 10px;
+            color: #1e7e9c;
+            font-weight: 500;
+        }
+        
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+        
+        .language-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .language-level {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .level-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #d1d5db;
+        }
+        
+        .level-dot.active {
+            background: #1e7e9c;
+        }
+        
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 3px 0;
+        }
+        
+        .bullet-list li {
+            margin-bottom: 2px;
+            padding-left: 15px;
+            position: relative;
+            font-size: 10px;
+            color: #374151;
+            line-height: 1.4;
+        }
+        
+        .bullet-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+        
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Full-width for profile */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 720px) {
+            .resume-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-image {
+                margin-top: 20px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body { padding: 0; background: white; }
+            .resume-container { box-shadow: none; max-width: 100%; height: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- Header -->
+        <div class="resume-header">
+            <div class="header-text">
+                <h1>{{ personal.fullName }}</h1>
+                <h2>{{ personal.title }}</h2>
+            </div>
+            {% if personal.profileImage %}
+            <img src="{{ personal.profileImage }}" alt="Profile" class="profile-image">
+            {% endif %}
+        </div>
+        
+        <!-- Contact Info -->
+        {% if personal.email or personal.phone or personal.location %}
+        <div class="resume-section full-width" style="margin-bottom: 10px;">
+            <div style="display: flex; gap: 20px; font-size: 10px; color: #6b7280;">
+                {% if personal.location %}<span>{{ personal.location }}</span>{% endif %}
+                {% if personal.phone %}<span>{{ personal.phone }}</span>{% endif %}
+                {% if personal.email %}<span>{{ personal.email }}</span>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Main Content Grid -->
+        <div class="resume-content">
+            <!-- LEFT COLUMN -->
+            <div class="left-column">
+                <!-- Profile -->
+                {% if profile %}
+                <div class="resume-section">
+                    <div class="resume-section-title">Profile</div>
+                    <div style="font-size: 10px; line-height: 1.6; color: #374151;">{{ profile }}</div>
+                </div>
+                {% endif %}
+                
+                <!-- Work Experience -->
+                {% if experience %}
+                <div class="resume-section">
+                    <div class="resume-section-title">Work Experience</div>
+                    {% for job in experience %}
+                    <div class="section-item">
+                        <div class="item-title">{{ job.title }} | {{ job.company }}</div>
+                        <div class="item-subtitle">{{ job.dates }}</div>
+                        {% if job.description %}
+                        {% if job.description is string %}
+                        <div class="item-description">{{ job.description }}</div>
+                        {% else %}
+                        <ul class="bullet-list">
+                            {% for bullet in job.description %}
+                            <li>{{ bullet }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- RIGHT COLUMN -->
+            <div class="right-column">
+                <!-- Skills -->
+                {% if skills %}
+                <div class="resume-section">
+                    <div class="resume-section-title">Skills</div>
+                    <div>
+                        {% for skill in skills %}
+                        <div class="skill-item">{{ skill }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Languages -->
+                {% if languages %}
+                <div class="resume-section">
+                    <div class="resume-section-title">Languages</div>
+                    {% for lang in languages %}
+                    <div class="language-item">
+                        <span class="language-name">{{ lang.name }}</span>
+                        <div class="language-level">
+                            {% for i in range(5) %}
+                            <div class="level-dot {% if i < lang.level|int %}active{% endif %}"></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Education -->
+        {% if education %}
+        <div class="resume-section full-width">
+            <div class="resume-section-title">Educations & Certifications</div>
+            {% for edu in education %}
+            <div class="section-item">
+                <div class="item-title">{{ edu.degree }} | {{ edu.school }}</div>
+                <div class="item-subtitle">{{ edu.dates }}</div>
+                {% if edu.details %}<div class="item-description">{{ edu.details }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
